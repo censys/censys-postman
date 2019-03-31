@@ -1,0 +1,735 @@
+{
+	"info": {
+		"_postman_id": "c721e1c9-7453-4012-baa6-70b49e7332f5",
+		"name": "Censys",
+		"description": "# Introduction\n\nThe Censys REST API provides programmatic access to the same data accessible through the web interface. API access is governed by our Terms of Service and all scripted access should use this API. We list our API endpoints below.\n\n# Overview\n\nAll APIs return three main sections: status, results, and metadata about the request. \n\nWe also maintain a Python library for interacting with the API, which can be installed with Pip: pip install censys. \n\n# Authentication\n\nAll API endpoints are hosted at https://censys.io/api/v1/ and require authenticating with HTTP basic auth using the API ID and secret that are shown under My Account. This page also lists the rate limits that apply to your account.\n\n# Error Codes\n\n* 400 BAD REQUEST - Your query could not be executed (e.g., query could not be parsed or timed out.) See error for more information.\n* 404 NOT FOUND - Specified search index was not valid.\n* 429 RATE LIMIT EXCEEDED - Your query was not executed because you have exceeded your specified rate limit.\n* 500 INTERNAL SERVER ERROR - An unexpected error occurred when trying to execute your query. Try again at a later time or contact us at support@censys.io if the problem persists.\n\n\n# Rate limit\n\nCensys rate limits to 10 queries a day per IP for unauthenticated clients, and variable numbers per day depending on your pricing tier. ",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Search",
+			"item": [
+				{
+					"name": "Certificate Search",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "{{CENSYS_API_SECRET}}",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "{{CENSYS_API_ID}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"query\": \"parsed.issuer.common_name: \\\"Let's Encrypt\\\"\",\n\t\"fields\": [\"parsed.fingerprint_sha256\", \"parsed.subject_dn\", \"parsed.issuer_dn\", \"parsed.issuer.organization\", \"parsed.validity.start\", \"parsed.validity.end\", \"parsed.names\"],\n\t\"page\": 1,\n\t\"flatten\": false\n}"
+						},
+						"url": {
+							"raw": "https://censys.io/api/v1/search/certificates",
+							"protocol": "https",
+							"host": [
+								"censys",
+								"io"
+							],
+							"path": [
+								"api",
+								"v1",
+								"search",
+								"certificates"
+							],
+							"query": [
+								{
+									"key": "query",
+									"value": "parsed.issuer.common_name: \"Let's Encrypt\"",
+									"description": "The query to be executed.",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "1",
+									"description": "The page of the result set to be returned. The number of pages in the result set is available under metadata in any request. By default, the API will return the first page of results. One indexed.",
+									"disabled": true
+								},
+								{
+									"key": "fields",
+									"value": "[\"parsed.fingerprint_sha256\", \"parsed.subject_dn\", \"parsed.issuer_dn\", \"parsed.issuer.organization\", \"parsed.validity.start\", \"parsed.validity.end\", \"parsed.names\"]",
+									"description": "The fields you would like returned in the result set in \"dot notation\".",
+									"disabled": true
+								},
+								{
+									"key": "flatten",
+									"value": "false",
+									"description": "Format of the returned results. Default is flattened.",
+									"disabled": true
+								}
+							]
+						},
+						"description": "The search endpoint allows searches against the current data in the Certificates index using the same search syntax as the primary site. The endpoint returns a paginated result set of certificates that match the search. Data should be posted as a JSON request document."
+					},
+					"response": []
+				},
+				{
+					"name": "IPv4 Search",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "{{CENSYS_API_SECRET}}",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "{{CENSYS_API_ID}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"query\": \"80.http.get.headers.server: nginx\",\n\t\"page\": 1,\n\t\"flatten\": true,\n\t\"fields\": [\"ip\",\n               \"updated_at\",\n               \"protocols\",\n               \"metadata.description\",\n               \"autonomous_system.name\",\n\n               \"23.telnet.banner\",\n\n               \"80.http.get.title\",\n               \"80.http.get.metadata.description\",\n               \"8080.http.get.metadata.description\",\n               \"8888.http.get.metadata.description\",\n               \"443.https.get.metadata.description\",\n\n               \"443.https.get.title\",\n               \"443.https.tls.certificate.parsed.subject_dn\",\n               \"443.https.tls.certificate.parsed.names\",\n               \"443.https.tls.certificate.parsed.subject.common_name\",\n               \"443.https.tls.certificate.parsed.extensions.subject_alt_name.dns_names\"]\n}"
+						},
+						"url": {
+							"raw": "https://censys.io/api/v1/search/ipv4",
+							"protocol": "https",
+							"host": [
+								"censys",
+								"io"
+							],
+							"path": [
+								"api",
+								"v1",
+								"search",
+								"ipv4"
+							],
+							"query": [
+								{
+									"key": "query",
+									"value": "80.http.get.headers.server: nginx",
+									"description": "The query to be executed.",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "1",
+									"description": "The page of the result set to be returned. The number of pages in the result set is available under metadata in any request. By default, the API will return the first page of results. One indexed.",
+									"disabled": true
+								},
+								{
+									"key": "fields",
+									"value": "[\"ip\", \"updated_at\", \"23.telnet.banner.banner\", \"80.http.get.title\", \"443.https.get.title\"]",
+									"description": "The fields you would like returned in the result set in \"dot notation.",
+									"disabled": true
+								},
+								{
+									"key": "flatten",
+									"value": "false",
+									"description": "Format of the returned results. Default is flattened.",
+									"disabled": true
+								}
+							]
+						},
+						"description": "The search endpoint allows searches against the current data in the IPv4 index using the same search syntax as the primary site. The endpoint returns a paginated result set of hosts that match the search. Data should be posted as a JSON request document.\n\n"
+					},
+					"response": []
+				},
+				{
+					"name": "Websites search",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "{{CENSYS_API_SECRET}}",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "{{CENSYS_API_ID}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"query\": \"facebook.com\",\n\t\"page\": 1,\n\t\"flatten\": false,\n\t\"fields\": [\"ip\", \"25.smtp.starttls.ehlo\", \"443.https.tls.version\", \"443.https_www.tls.certificate.parsed.issuer.organization\"]\n}"
+						},
+						"url": {
+							"raw": "https://censys.io/api/v1/search/websites?",
+							"protocol": "https",
+							"host": [
+								"censys",
+								"io"
+							],
+							"path": [
+								"api",
+								"v1",
+								"search",
+								"websites"
+							],
+							"query": [
+								{
+									"key": "query",
+									"value": "facebook.com",
+									"description": "The query to be executed.",
+									"disabled": true
+								},
+								{
+									"key": "fields",
+									"value": "[\"443.https.tls.certificate.parsed.issuer.organization\", \"443.https.tls.certificate.parsed.subject.country\"]",
+									"description": "The fields you would like returned in the result set in \"dot notation\".",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "1",
+									"description": "The page of the result set to be returned. The number of pages in the result set is available under metadata in any request. By default, the API will return the first page of results. One indexed.\n",
+									"disabled": true
+								},
+								{
+									"key": "flatten",
+									"value": "false",
+									"description": "Format of the returned results. Default is flattened.",
+									"disabled": true
+								}
+							]
+						},
+						"description": "The search endpoint allows searches against the Alexa Top Million index using the same search syntax as the main site. The endpoint returns a paginated result of the most recent information we know for the set of user selected fields. More information about the returned websites can be fetched using the /view endpoint."
+					},
+					"response": []
+				}
+			],
+			"description": "The search endpoint allows searches against the IPv4, Alexa Top Million, and Certificates indexes using the same search syntax as the main site. The endpoint returns a paginated result of the most recent information we know for the set of user selected fields. More information about the returned hosts, websites, and certificates can be fetched using the /view endpoint."
+		},
+		{
+			"name": "View",
+			"item": [
+				{
+					"name": "IPv4 view",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "{{CENSYS_API_SECRET}}",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "{{CENSYS_API_ID}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://censys.io/api/v1/view/ipv4/8.8.8.8",
+							"protocol": "https",
+							"host": [
+								"censys",
+								"io"
+							],
+							"path": [
+								"api",
+								"v1",
+								"view",
+								"ipv4",
+								"8.8.8.8"
+							]
+						},
+						"description": "The View API exposes a single endpoint, /api/v1/view, which can be used to fetch full information once its IPv4 address is known. This endpoint is frequently used in conjunction with the Search API Endpoint, which allows you to find the IDs of hosts that match a query."
+					},
+					"response": []
+				},
+				{
+					"name": "Certificates viws",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "{{CENSYS_API_SECRET}}",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "{{CENSYS_API_ID}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://censys.io/api/v1/view/certificates/c06c035a35464d32912584500de796ffec8148ac2704b5d84bc833154f79f6d0",
+							"protocol": "https",
+							"host": [
+								"censys",
+								"io"
+							],
+							"path": [
+								"api",
+								"v1",
+								"view",
+								"certificates",
+								"c06c035a35464d32912584500de796ffec8148ac2704b5d84bc833154f79f6d0"
+							]
+						},
+						"description": "The View API exposes a single endpoint, /api/v1/view, which can be used to fetch full information once its IPv4 address is known. This endpoint is frequently used in conjunction with the Search API Endpoint, which allows you to find the IDs of hosts that match a query."
+					},
+					"response": []
+				},
+				{
+					"name": "Websites view",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "{{CENSYS_API_SECRET}}",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "{{CENSYS_API_ID}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://censys.io/api/v1/view/websites/facebook.com",
+							"protocol": "https",
+							"host": [
+								"censys",
+								"io"
+							],
+							"path": [
+								"api",
+								"v1",
+								"view",
+								"websites",
+								"facebook.com"
+							]
+						},
+						"description": "The View API exposes a single endpoint, /api/v1/view, which can be used to fetch full information once its IPv4 address is known. This endpoint is frequently used in conjunction with the Search API Endpoint, which allows you to find the IDs of hosts that match a query."
+					},
+					"response": []
+				}
+			],
+			"description": "The view endpoint fetches the structured data we have about a specific host, website, or certificate once you know the host's IP address, website's domain, or certificate's SHA-256 fingerprint."
+		},
+		{
+			"name": "Report",
+			"item": [
+				{
+					"name": "IPv4 report",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "{{CENSYS_API_SECRET}}",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "{{CENSYS_API_ID}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"query\":\"80.http.get.headers.server: Apache\",\n  \"field\":\"location.country\",\n  \"buckets\":100\n}"
+						},
+						"url": {
+							"raw": "https://censys.io/api/v1/report/ipv4",
+							"protocol": "https",
+							"host": [
+								"censys",
+								"io"
+							],
+							"path": [
+								"api",
+								"v1",
+								"report",
+								"ipv4"
+							],
+							"query": [
+								{
+									"key": "query",
+									"value": "80.http.get.headers.server: nginx",
+									"description": "The query to be executed.",
+									"disabled": true
+								},
+								{
+									"key": "field",
+									"value": "location.country_code",
+									"description": "The field you are running a breakdown on in \"dot notation\"",
+									"disabled": true
+								},
+								{
+									"key": "buckets",
+									"value": "10",
+									"description": "The maximum number of values to be returned in the report. Maximum: 500. ",
+									"disabled": true
+								}
+							]
+						},
+						"description": "The build report endpoint lets you run aggregate reports on the breakdown of a field in a result set analogous to the \"Build Report\" functionality in the front end. Data should be posted as a JSON request document."
+					},
+					"response": []
+				},
+				{
+					"name": "Certificates report",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "{{CENSYS_API_SECRET}}",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "{{CENSYS_API_ID}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"query\": \"parsed.issuer.organization: cloudflare\",\n\t\"field\": \"parsed.subject.locality\",\n\t\"buckets\": 10\n}"
+						},
+						"url": {
+							"raw": "https://censys.io/api/v1/report/certificates",
+							"protocol": "https",
+							"host": [
+								"censys",
+								"io"
+							],
+							"path": [
+								"api",
+								"v1",
+								"report",
+								"certificates"
+							],
+							"query": [
+								{
+									"key": "query",
+									"value": "parsed.subject_dn: facdebook",
+									"description": "The query to be executed.",
+									"disabled": true
+								},
+								{
+									"key": "field",
+									"value": "parsed.issuer.organization",
+									"description": "The field you are running a breakdown on in \"dot notation\".",
+									"disabled": true
+								},
+								{
+									"key": "buckets",
+									"value": "10",
+									"description": "The maximum number of values to be returned in the report. Maximum: 500.",
+									"disabled": true
+								}
+							]
+						},
+						"description": "The build report endpoint lets you run aggregate reports on the breakdown of a field in a result set analogous to the \"Build Report\" functionality in the front end. Data should be posted as a JSON request document."
+					},
+					"response": []
+				},
+				{
+					"name": "Websites report",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "{{CENSYS_API_SECRET}}",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "{{CENSYS_API_ID}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"query\": \"facebook.com\",\n\t\"field\": \"25.smtp.starttls.tls.cipher_suite.name\",\n\t\"buckets\": 10\n}"
+						},
+						"url": {
+							"raw": "https://censys.io/api/v1/report/websites",
+							"protocol": "https",
+							"host": [
+								"censys",
+								"io"
+							],
+							"path": [
+								"api",
+								"v1",
+								"report",
+								"websites"
+							],
+							"query": [
+								{
+									"key": "query",
+									"value": "facebook.com",
+									"description": "The query to be executed. ",
+									"disabled": true
+								},
+								{
+									"key": "field",
+									"value": "443.https_www.tls.certificate.parsed.subject.country\t",
+									"description": "The field you are running a breakdown on in \"dot notation\".",
+									"disabled": true
+								},
+								{
+									"key": "buckets",
+									"value": "10",
+									"description": "The maximum number of values to be returned in the report. Maximum: 500.",
+									"disabled": true
+								}
+							]
+						},
+						"description": "The build report endpoint lets you run aggregate reports on the breakdown of a field in a result set analogous to the \"Build Report\" functionality in the front end. For example, if you wanted to determine the breakdown of cipher suites selected by Top Million Websites. Data should be posted as a JSON request document."
+					},
+					"response": []
+				}
+			],
+			"description": "The report endpoint allows you to determine the aggregate breakdown of a value for the results a query, similar to the \"Build Report\" functionality available in the primary search interface. For example, if you wanted to determine the breakdown of cipher suites selected by all websites in the Top Million."
+		},
+		{
+			"name": "Account",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "{{CENSYS_API_SECRET}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{CENSYS_API_ID}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://censys.io/api/v1/account",
+					"protocol": "https",
+					"host": [
+						"censys",
+						"io"
+					],
+					"path": [
+						"api",
+						"v1",
+						"account"
+					]
+				},
+				"description": "The Account API is a single endpoint, /api/v1/account, which fetches information about your Censys account. Most importantly, you can use this endpoint to check on your current query quota usage."
+			},
+			"response": []
+		},
+		{
+			"name": "Data",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "{{CENSYS_API_SECRET}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{CENSYS_API_ID}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://censys.io/api/v1/data",
+					"protocol": "https",
+					"host": [
+						"censys",
+						"io"
+					],
+					"path": [
+						"api",
+						"v1",
+						"data"
+					]
+				},
+				"description": "The Raw Data API exposes metadata on the raw data that can be downloaded from Censys. There are several endpoints, which allow you to get the list of all scan series (Get Series), get details on a particular series (View Series), and get details on a particular scan within a series (View Result)."
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "938ff0da-7a8c-4e34-ba0b-c73c93ec25c7",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "abc20a48-2d38-4824-87ce-20e81715e1f2",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "f94182b7-f496-40ea-a25d-f32f12d0a14a",
+			"key": "CENSYS_API_ID",
+			"value": "YOUR_ID",
+			"type": "string"
+		},
+		{
+			"id": "a965c546-288e-4fc4-8326-67896a668483",
+			"key": "CENSYS_API_SECRET",
+			"value": "YOUR_SECRET",
+			"type": "string"
+		}
+	]
+}
