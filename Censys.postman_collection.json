@@ -1221,7 +1221,88 @@
 									]
 								}
 							},
-							"response": []
+							"response": [
+								{
+									"name": "View",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{BASE_URL}}/api/v2/hosts/8.8.8.8",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"v2",
+												"hosts",
+												"8.8.8.8"
+											],
+											"query": [
+												{
+													"key": "at_time",
+													"value": "2021-04-02T17:49:05Z",
+													"description": "Fetches a host and its services at the given point in time. Requires historical API access.\nNanosecond precision is allowed.",
+													"disabled": true
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Thu, 08 Apr 2021 20:51:25 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Strict-Transport-Security",
+											"value": "max-age=31536000; includeSubDomains; preload"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "CF-Cache-Status",
+											"value": "DYNAMIC"
+										},
+										{
+											"key": "Server",
+											"value": "cloudflare"
+										},
+										{
+											"key": "Content-Encoding",
+											"value": "br"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"status\": \"OK\",\n    \"code\": 200,\n    \"result\": {\n        \"services\": [\n            {\n                \"transport_protocol\": \"UDP\",\n                \"truncated\": false,\n                \"service_name\": \"DNS\",\n                \"_decoded\": \"dns\",\n                \"source_ip\": \"162.142.125.39\",\n                \"extended_service_name\": \"DNS\",\n                \"observed_at\": \"2021-04-08T18:10:40.230987923Z\",\n                \"dns\": {\n                    \"server_type\": \"FORWARDING\"\n                },\n                \"perspective_id\": \"PERSPECTIVE_HE\",\n                \"port\": 53,\n                \"software\": []\n            },\n            {\n                \"transport_protocol\": \"TCP\",\n                \"_encoding\": {\n                    \"banner\": \"DISPLAY_BASE64\",\n                    \"certificate\": \"DISPLAY_BASE64\"\n                },\n                \"http\": {\n                    \"_encoding\": {\n                        \"body_hash\": \"DISPLAY_BASE64\"\n                    },\n                    \"request\": {\n                        \"headers\": {\n                            \"Accept\": {\n                                \"_encoding\": {\n                                    \"headers\": \"DISPLAY_BASE64\"\n                                },\n                                \"headers\": [\n                                    \"Ki8q\"\n                                ]\n                            },\n                            \"User-Agent\": {\n                                \"_encoding\": {\n                                    \"headers\": \"DISPLAY_BASE64\"\n                                },\n                                \"headers\": [\n                                    \"TW96aWxsYS81LjAgKGNvbXBhdGlibGU7IENlbnN5c0luc3BlY3QvMS4xOyAraHR0cHM6Ly9hYm91dC5jZW5zeXMuaW8vKQ==\"\n                                ]\n                            }\n                        },\n                        \"method\": \"GET\",\n                        \"uri\": \"https://8.8.8.8/\"\n                    },\n                    \"response\": {\n                        \"body\": \"PCFET0NUWVBFIGh0bWw+CjxodG1sIGxhbmc9ZW4+CiAgPG1ldGEgY2hhcnNldD11dGYtOD4KICA8bWV0YSBuYW1lPXZpZXdwb3J0IGNvbnRlbnQ9ImluaXRpYWwtc2NhbGU9MSwgbWluaW11bS1zY2FsZT0xLCB3aWR0aD1kZXZpY2Utd2lkdGgiPgogIDx0aXRsZT5FcnJvciA0MDQgKE5vdCBGb3VuZCkhITE8L3RpdGxlPgogIDxzdHlsZT4KICAgICp7bWFyZ2luOjA7cGFkZGluZzowfWh0bWwsY29kZXtmb250OjE1cHgvMjJweCBhcmlhbCxzYW5zLXNlcmlmfWh0bWx7YmFja2dyb3VuZDojZmZmO2NvbG9yOiMyMjI7cGFkZGluZzoxNXB4fWJvZHl7bWFyZ2luOjclIGF1dG8gMDttYXgtd2lkdGg6MzkwcHg7bWluLWhlaWdodDoxODBweDtwYWRkaW5nOjMwcHggMCAxNXB4fSogPiBib2R5e2JhY2tncm91bmQ6dXJsKC8vd3d3Lmdvb2dsZS5jb20vaW1hZ2VzL2Vycm9ycy9yb2JvdC5wbmcpIDEwMCUgNXB4IG5vLXJlcGVhdDtwYWRkaW5nLXJpZ2h0OjIwNXB4fXB7bWFyZ2luOjExcHggMCAyMnB4O292ZXJmbG93OmhpZGRlbn1pbnN7Y29sb3I6Izc3Nzt0ZXh0LWRlY29yYXRpb246bm9uZX1hIGltZ3tib3JkZXI6MH1AbWVkaWEgc2NyZWVuIGFuZCAobWF4LXdpZHRoOjc3MnB4KXtib2R5e2JhY2tncm91bmQ6bm9uZTttYXJnaW4tdG9wOjA7bWF4LXdpZHRoOm5vbmU7cGFkZGluZy1yaWdodDowfX0jbG9nb3tiYWNrZ3JvdW5kOnVybCgvL3d3dy5nb29nbGUuY29tL2ltYWdlcy9icmFuZGluZy9nb29nbGVsb2dvLzF4L2dvb2dsZWxvZ29fY29sb3JfMTUweDU0ZHAucG5nKSBuby1yZXBlYXQ7bWFyZ2luLWxlZnQ6LTVweH1AbWVkaWEgb25seSBzY3JlZW4gYW5kIChtaW4tcmVzb2x1dGlvbjoxOTJkcGkpeyNsb2dve2JhY2tncm91bmQ6dXJsKC8vd3d3Lmdvb2dsZS5jb20vaW1hZ2VzL2JyYW5kaW5nL2dvb2dsZWxvZ28vMngvZ29vZ2xlbG9nb19jb2xvcl8xNTB4NTRkcC5wbmcpIG5vLXJlcGVhdCAwJSAwJS8xMDAlIDEwMCU7LW1vei1ib3JkZXItaW1hZ2U6dXJsKC8vd3d3Lmdvb2dsZS5jb20vaW1hZ2VzL2JyYW5kaW5nL2dvb2dsZWxvZ28vMngvZ29vZ2xlbG9nb19jb2xvcl8xNTB4NTRkcC5wbmcpIDB9fUBtZWRpYSBvbmx5IHNjcmVlbiBhbmQgKC13ZWJraXQtbWluLWRldmljZS1waXhlbC1yYXRpbzoyKXsjbG9nb3tiYWNrZ3JvdW5kOnVybCgvL3d3dy5nb29nbGUuY29tL2ltYWdlcy9icmFuZGluZy9nb29nbGVsb2dvLzJ4L2dvb2dsZWxvZ29fY29sb3JfMTUweDU0ZHAucG5nKSBuby1yZXBlYXQ7LXdlYmtpdC1iYWNrZ3JvdW5kLXNpemU6MTAwJSAxMDAlfX0jbG9nb3tkaXNwbGF5OmlubGluZS1ibG9jaztoZWlnaHQ6NTRweDt3aWR0aDoxNTBweH0KICA8L3N0eWxlPgogIDxhIGhyZWY9Ly93d3cuZ29vZ2xlLmNvbS8+PHNwYW4gaWQ9bG9nbyBhcmlhLWxhYmVsPUdvb2dsZT48L3NwYW4+PC9hPgogIDxwPjxiPjQwNC48L2I+IDxpbnM+VGhhdOKAmXMgYW4gZXJyb3IuPC9pbnM+CiAgPHA+VGhlIHJlcXVlc3RlZCBVUkwgPGNvZGU+LzwvY29kZT4gd2FzIG5vdCBmb3VuZCBvbiB0aGlzIHNlcnZlci4gIDxpbnM+VGhhdOKAmXMgYWxsIHdlIGtub3cuPC9pbnM+Cg==\",\n                        \"_encoding\": {\n                            \"body\": \"DISPLAY_BASE64\",\n                            \"html_tags\": \"DISPLAY_BASE64\"\n                        },\n                        \"protocol\": \"HTTP/1.1\",\n                        \"body_size\": 1561,\n                        \"status_code\": 404,\n                        \"headers\": {\n                            \"Content-Length\": {\n                                \"_encoding\": {\n                                    \"headers\": \"DISPLAY_BASE64\"\n                                },\n                                \"headers\": [\n                                    \"PFJFREFDVEVEPg==\"\n                                ]\n                            },\n                            \"X-Xss-Protection\": {\n                                \"_encoding\": {\n                                    \"headers\": \"DISPLAY_BASE64\"\n                                },\n                                \"headers\": [\n                                    \"MA==\"\n                                ]\n                            },\n                            \"Server\": {\n                                \"_encoding\": {\n                                    \"headers\": \"DISPLAY_BASE64\"\n                                },\n                                \"headers\": [\n                                    \"SFRUUCBzZXJ2ZXIgKHVua25vd24p\"\n                                ]\n                            },\n                            \"Date\": {\n                                \"_encoding\": {\n                                    \"headers\": \"DISPLAY_BASE64\"\n                                },\n                                \"headers\": [\n                                    \"PFJFREFDVEVEPg==\"\n                                ]\n                            },\n                            \"X-Frame-Options\": {\n                                \"_encoding\": {\n                                    \"headers\": \"DISPLAY_BASE64\"\n                                },\n                                \"headers\": [\n                                    \"U0FNRU9SSUdJTg==\"\n                                ]\n                            },\n                            \"Alt-Svc\": {\n                                \"_encoding\": {\n                                    \"headers\": \"DISPLAY_BASE64\"\n                                },\n                                \"headers\": [\n                                    \"aDMtMjk9Ijo0NDMiOyBtYT0yNTkyMDAwLGgzLVQwNTE9Ijo0NDMiOyBtYT0yNTkyMDAwLGgzLVEwNTA9Ijo0NDMiOyBtYT0yNTkyMDAwLGgzLVEwNDY9Ijo0NDMiOyBtYT0yNTkyMDAwLGgzLVEwNDM9Ijo0NDMiOyBtYT0yNTkyMDAwLHF1aWM9Ijo0NDMiOyBtYT0yNTkyMDAwOyB2PSI0Niw0MyI=\"\n                                ]\n                            },\n                            \"Content-Type\": {\n                                \"_encoding\": {\n                                    \"headers\": \"DISPLAY_BASE64\"\n                                },\n                                \"headers\": [\n                                    \"dGV4dC9odG1sOyBjaGFyc2V0PVVURi04\"\n                                ]\n                            }\n                        },\n                        \"html_tags\": [\n                            \"PHRpdGxlPkVycm9yIDQwNCAoTm90IEZvdW5kKSEhMTwvdGl0bGU+\",\n                            \"PG1ldGEgY2hhcnNldD11dGYtOD4=\",\n                            \"PG1ldGEgbmFtZT12aWV3cG9ydCBjb250ZW50PSJpbml0aWFsLXNjYWxlPTEsIG1pbmltdW0tc2NhbGU9MSwgd2lkdGg9ZGV2aWNlLXdpZHRoIj4=\"\n                        ],\n                        \"status_reason\": \"Not Found\"\n                    },\n                    \"body_hash\": \"c2hhMTo5MDUxNDZjNzM5OTQzY2UxODk3OTVlMjM0ZjFjNmViY2FiMmY1N2E5\"\n                },\n                \"certificate\": \"5Y6JpybYC7AhmyGMOrnYGLS+ddd5WVCEANZg6+HBvj0=\",\n                \"truncated\": false,\n                \"service_name\": \"HTTP\",\n                \"_decoded\": \"http\",\n                \"source_ip\": \"74.120.14.54\",\n                \"tls\": {\n                    \"version_selected\": \"TLSv1_2\",\n                    \"certificates\": {\n                        \"_encoding\": {\n                            \"chain_fps_sha_256\": \"DISPLAY_BASE64\",\n                            \"leaf_fp_sha_256\": \"DISPLAY_BASE64\"\n                        },\n                        \"chain_fps_sha_256\": [\n                            \"lcB041kCoUq9nRmvtuf4Dmaf+OI2MnBTnZY2E/BKqiE=\"\n                        ],\n                        \"leaf_data\": {\n                            \"pubkey_algorithm\": \"RSA\",\n                            \"subject_dn\": \"C=US, ST=California, L=Mountain View, O=Google LLC, CN=dns.google\",\n                            \"pubkey_bit_size\": 2048,\n                            \"issuer_dn\": \"C=US, O=Google Trust Services, CN=GTS CA 1O1\",\n                            \"names\": [\n                                \"*.dns.google.com\",\n                                \"8.8.4.4\",\n                                \"8.8.8.8\",\n                                \"8888.google\",\n                                \"dns.google\",\n                                \"dns.google.com\",\n                                \"dns64.dns.google\"\n                            ],\n                            \"tbs_fingerprint\": \"d1927fb7868d80b299a9613ba58c6828cfd25e7ad05993be66d9a6860f78053e\"\n                        },\n                        \"leaf_fp_sha_256\": \"5Y6JpybYC7AhmyGMOrnYGLS+ddd5WVCEANZg6+HBvj0=\"\n                    },\n                    \"cipher_selected\": \"TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256\"\n                },\n                \"extended_service_name\": \"HTTP\",\n                \"observed_at\": \"2021-04-08T18:45:05.700159278Z\",\n                \"perspective_id\": \"PERSPECTIVE_TELIA\",\n                \"banner\": \"SFRUUC8xLjEgNDA0IE5vdCBGb3VuZApTZXJ2ZXI6IEhUVFAgc2VydmVyICh1bmtub3duKQpDb250ZW50LUxlbmd0aDogPFJFREFDVEVEPgpDb250ZW50LVR5cGU6IHRleHQvaHRtbDsgY2hhcnNldD1VVEYtOApEYXRlOiA8UkVEQUNURUQ+ClgtWHNzLVByb3RlY3Rpb246IDAKQWx0LVN2YzogaDMtMjk9Ijo0NDMiOyBtYT0yNTkyMDAwLGgzLVQwNTE9Ijo0NDMiOyBtYT0yNTkyMDAwLGgzLVEwNTA9Ijo0NDMiOyBtYT0yNTkyMDAwLGgzLVEwNDY9Ijo0NDMiOyBtYT0yNTkyMDAwLGgzLVEwNDM9Ijo0NDMiOyBtYT0yNTkyMDAwLHF1aWM9Ijo0NDMiOyBtYT0yNTkyMDAwOyB2PSI0Niw0MyIKWC1GcmFtZS1PcHRpb25zOiBTQU1FT1JJR0lO\",\n                \"port\": 443,\n                \"software\": []\n            }\n        ],\n        \"ip\": \"8.8.8.8\",\n        \"location_updated_at\": \"2021-03-30T14:53:12.980328Z\",\n        \"location\": {\n            \"country\": \"United States\",\n            \"coordinates\": {\n                \"latitude\": 37.751,\n                \"longitude\": -97.822\n            },\n            \"registered_country\": \"United States\",\n            \"registered_country_code\": \"US\",\n            \"postal_code\": \"\",\n            \"country_code\": \"US\",\n            \"timezone\": \"America/Chicago\",\n            \"continent\": \"North America\"\n        },\n        \"last_updated_at\": \"2021-04-08T18:45:05.829Z\"\n    }\n}"
+								}
+							]
 						},
 						{
 							"name": "Search",
@@ -1276,7 +1357,98 @@
 									]
 								}
 							},
-							"response": []
+							"response": [
+								{
+									"name": "Search",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{BASE_URL}}/api/v2/hosts/search?q=service.service_name: HTTP&per_page=50",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"v2",
+												"hosts",
+												"search"
+											],
+											"query": [
+												{
+													"key": "q",
+													"value": "service.service_name: HTTP",
+													"description": "Query used to search for Hosts. Query uses the Censys Search Language."
+												},
+												{
+													"key": "per_page",
+													"value": "50",
+													"description": "The maximum number of Hits to show per API response. Minimum of 0. Maximum of 100. If not specified, 50 results will be returned by default."
+												},
+												{
+													"key": "cursor",
+													"value": "nextCursorToken",
+													"description": "Cursor token, when supplied, will fetch either the next or previous page of results matching the rest of the given query parameters.",
+													"disabled": true
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Thu, 08 Apr 2021 20:51:50 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Strict-Transport-Security",
+											"value": "max-age=31536000; includeSubDomains; preload"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "CF-Cache-Status",
+											"value": "DYNAMIC"
+										},
+										{
+											"key": "Server",
+											"value": "cloudflare"
+										},
+										{
+											"key": "Content-Encoding",
+											"value": "br"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"status\": \"OK\",\n    \"code\": 200,\n    \"result\": {\n        \"query\": \"service.service_name: HTTP\",\n        \"hits\": [\n            {\n                \"services\": [\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 443\n                    },\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 80\n                    }\n                ],\n                \"ip\": \"1.0.0.0\",\n                \"highlights\": [\n                    {\n                        \"matches\": [\n                            \"HTTP\"\n                        ],\n                        \"field\": \"service.service_name\"\n                    }\n                ]\n            },\n            {\n                \"services\": [\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 80\n                    },\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 443\n                    }\n                ],\n                \"ip\": \"1.0.0.1\",\n                \"highlights\": [\n                    {\n                        \"matches\": [\n                            \"HTTP\"\n                        ],\n                        \"field\": \"service.service_name\"\n                    }\n                ]\n            },\n            {\n                \"services\": [\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 80\n                    },\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 443\n                    }\n                ],\n                \"ip\": \"1.0.0.2\",\n                \"highlights\": [\n                    {\n                        \"matches\": [\n                            \"HTTP\"\n                        ],\n                        \"field\": \"service.service_name\"\n                    }\n                ]\n            },\n            {\n                \"services\": [\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 80\n                    },\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 443\n                    }\n                ],\n                \"ip\": \"1.0.0.3\",\n                \"highlights\": [\n                    {\n                        \"matches\": [\n                            \"HTTP\"\n                        ],\n                        \"field\": \"service.service_name\"\n                    }\n                ]\n            },\n            {\n                \"services\": [\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 443\n                    },\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 80\n                    }\n                ],\n                \"ip\": \"1.0.0.4\",\n                \"highlights\": [\n                    {\n                        \"matches\": [\n                            \"HTTP\"\n                        ],\n                        \"field\": \"service.service_name\"\n                    }\n                ]\n            },\n            {\n                \"services\": [\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 443\n                    }\n                ],\n                \"ip\": \"1.0.0.5\",\n                \"highlights\": [\n                    {\n                        \"matches\": [\n                            \"HTTP\"\n                        ],\n                        \"field\": \"service.service_name\"\n                    }\n                ]\n            },\n            {\n                \"services\": [\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 443\n                    }\n                ],\n                \"ip\": \"1.0.0.6\",\n                \"highlights\": [\n                    {\n                        \"matches\": [\n                            \"HTTP\"\n                        ],\n                        \"field\": \"service.service_name\"\n                    }\n                ]\n            },\n            {\n                \"services\": [\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 443\n                    }\n                ],\n                \"ip\": \"1.0.0.7\",\n                \"highlights\": [\n                    {\n                        \"matches\": [\n                            \"HTTP\"\n                        ],\n                        \"field\": \"service.service_name\"\n                    }\n                ]\n            },\n            {\n                \"services\": [\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 443\n                    },\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 80\n                    }\n                ],\n                \"ip\": \"1.0.0.8\",\n                \"highlights\": [\n                    {\n                        \"matches\": [\n                            \"HTTP\"\n                        ],\n                        \"field\": \"service.service_name\"\n                    }\n                ]\n            },\n            {\n                \"services\": [\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 443\n                    },\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 80\n                    }\n                ],\n                \"ip\": \"1.0.0.9\",\n                \"highlights\": [\n                    {\n                        \"matches\": [\n                            \"HTTP\"\n                        ],\n                        \"field\": \"service.service_name\"\n                    }\n                ]\n            },\n            {\n                \"services\": [\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 443\n                    }\n                ],\n                \"ip\": \"1.0.0.10\",\n                \"highlights\": [\n                    {\n                        \"matches\": [\n                            \"HTTP\"\n                        ],\n                        \"field\": \"service.service_name\"\n                    }\n                ]\n            },\n            {\n                \"services\": [\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 443\n                    },\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 80\n                    }\n                ],\n                \"ip\": \"1.0.0.11\",\n                \"highlights\": [\n                    {\n                        \"matches\": [\n                            \"HTTP\"\n                        ],\n                        \"field\": \"service.service_name\"\n                    }\n                ]\n            },\n            {\n                \"services\": [\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 443\n                    },\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 80\n                    }\n                ],\n                \"ip\": \"1.0.0.12\",\n                \"highlights\": [\n                    {\n                        \"matches\": [\n                            \"HTTP\"\n                        ],\n                        \"field\": \"service.service_name\"\n                    }\n                ]\n            },\n            {\n                \"services\": [\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 443\n                    }\n                ],\n                \"ip\": \"1.0.0.13\",\n                \"highlights\": [\n                    {\n                        \"matches\": [\n                            \"HTTP\"\n                        ],\n                        \"field\": \"service.service_name\"\n                    }\n                ]\n            },\n            {\n                \"services\": [\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 443\n                    },\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 80\n                    }\n                ],\n                \"ip\": \"1.0.0.14\",\n                \"highlights\": [\n                    {\n                        \"matches\": [\n                            \"HTTP\"\n                        ],\n                        \"field\": \"service.service_name\"\n                    }\n                ]\n            },\n            {\n                \"services\": [\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 443\n                    }\n                ],\n                \"ip\": \"1.0.0.15\",\n                \"highlights\": [\n                    {\n                        \"matches\": [\n                            \"HTTP\"\n                        ],\n                        \"field\": \"service.service_name\"\n                    }\n                ]\n            },\n            {\n                \"services\": [\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 443\n                    },\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 80\n                    }\n                ],\n                \"ip\": \"1.0.0.16\",\n                \"highlights\": [\n                    {\n                        \"matches\": [\n                            \"HTTP\"\n                        ],\n                        \"field\": \"service.service_name\"\n                    }\n                ]\n            },\n            {\n                \"services\": [\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 443\n                    }\n                ],\n                \"ip\": \"1.0.0.17\",\n                \"highlights\": [\n                    {\n                        \"matches\": [\n                            \"HTTP\"\n                        ],\n                        \"field\": \"service.service_name\"\n                    }\n                ]\n            },\n            {\n                \"services\": [\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 443\n                    }\n                ],\n                \"ip\": \"1.0.0.18\",\n                \"highlights\": [\n                    {\n                        \"matches\": [\n                            \"HTTP\"\n                        ],\n                        \"field\": \"service.service_name\"\n                    }\n                ]\n            },\n            {\n                \"services\": [\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 443\n                    }\n                ],\n                \"ip\": \"1.0.0.19\",\n                \"highlights\": [\n                    {\n                        \"matches\": [\n                            \"HTTP\"\n                        ],\n                        \"field\": \"service.service_name\"\n                    }\n                ]\n            },\n            {\n                \"services\": [\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 443\n                    },\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 80\n                    }\n                ],\n                \"ip\": \"1.0.0.20\",\n                \"highlights\": [\n                    {\n                        \"matches\": [\n                            \"HTTP\"\n                        ],\n                        \"field\": \"service.service_name\"\n                    }\n                ]\n            },\n            {\n                \"services\": [\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 443\n                    }\n                ],\n                \"ip\": \"1.0.0.21\",\n                \"highlights\": [\n                    {\n                        \"matches\": [\n                            \"HTTP\"\n                        ],\n                        \"field\": \"service.service_name\"\n                    }\n                ]\n            },\n            {\n                \"services\": [\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 443\n                    },\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 80\n                    }\n                ],\n                \"ip\": \"1.0.0.22\",\n                \"highlights\": [\n                    {\n                        \"matches\": [\n                            \"HTTP\"\n                        ],\n                        \"field\": \"service.service_name\"\n                    }\n                ]\n            },\n            {\n                \"services\": [\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 443\n                    },\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 80\n                    }\n                ],\n                \"ip\": \"1.0.0.23\",\n                \"highlights\": [\n                    {\n                        \"matches\": [\n                            \"HTTP\"\n                        ],\n                        \"field\": \"service.service_name\"\n                    }\n                ]\n            },\n            {\n                \"services\": [\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 443\n                    },\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 80\n                    }\n                ],\n                \"ip\": \"1.0.0.24\",\n                \"highlights\": [\n                    {\n                        \"matches\": [\n                            \"HTTP\"\n                        ],\n                        \"field\": \"service.service_name\"\n                    }\n                ]\n            },\n            {\n                \"services\": [\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 443\n                    }\n                ],\n                \"ip\": \"1.0.0.25\",\n                \"highlights\": [\n                    {\n                        \"matches\": [\n                            \"HTTP\"\n                        ],\n                        \"field\": \"service.service_name\"\n                    }\n                ]\n            },\n            {\n                \"services\": [\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 443\n                    },\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 80\n                    }\n                ],\n                \"ip\": \"1.0.0.26\",\n                \"highlights\": [\n                    {\n                        \"matches\": [\n                            \"HTTP\"\n                        ],\n                        \"field\": \"service.service_name\"\n                    }\n                ]\n            },\n            {\n                \"services\": [\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 443\n                    }\n                ],\n                \"ip\": \"1.0.0.27\",\n                \"highlights\": [\n                    {\n                        \"matches\": [\n                            \"HTTP\"\n                        ],\n                        \"field\": \"service.service_name\"\n                    }\n                ]\n            },\n            {\n                \"services\": [\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 443\n                    }\n                ],\n                \"ip\": \"1.0.0.28\",\n                \"highlights\": [\n                    {\n                        \"matches\": [\n                            \"HTTP\"\n                        ],\n                        \"field\": \"service.service_name\"\n                    }\n                ]\n            },\n            {\n                \"services\": [\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 443\n                    },\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 80\n                    }\n                ],\n                \"ip\": \"1.0.0.29\",\n                \"highlights\": [\n                    {\n                        \"matches\": [\n                            \"HTTP\"\n                        ],\n                        \"field\": \"service.service_name\"\n                    }\n                ]\n            },\n            {\n                \"services\": [\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 443\n                    }\n                ],\n                \"ip\": \"1.0.0.30\",\n                \"highlights\": [\n                    {\n                        \"matches\": [\n                            \"HTTP\"\n                        ],\n                        \"field\": \"service.service_name\"\n                    }\n                ]\n            },\n            {\n                \"services\": [\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 443\n                    },\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 80\n                    }\n                ],\n                \"ip\": \"1.0.0.31\",\n                \"highlights\": [\n                    {\n                        \"matches\": [\n                            \"HTTP\"\n                        ],\n                        \"field\": \"service.service_name\"\n                    }\n                ]\n            },\n            {\n                \"services\": [\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 443\n                    },\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 80\n                    }\n                ],\n                \"ip\": \"1.0.0.32\",\n                \"highlights\": [\n                    {\n                        \"matches\": [\n                            \"HTTP\"\n                        ],\n                        \"field\": \"service.service_name\"\n                    }\n                ]\n            },\n            {\n                \"services\": [\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 443\n                    }\n                ],\n                \"ip\": \"1.0.0.33\",\n                \"highlights\": [\n                    {\n                        \"matches\": [\n                            \"HTTP\"\n                        ],\n                        \"field\": \"service.service_name\"\n                    }\n                ]\n            },\n            {\n                \"services\": [\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 443\n                    },\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 80\n                    }\n                ],\n                \"ip\": \"1.0.0.34\",\n                \"highlights\": [\n                    {\n                        \"matches\": [\n                            \"HTTP\"\n                        ],\n                        \"field\": \"service.service_name\"\n                    }\n                ]\n            },\n            {\n                \"services\": [\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 443\n                    }\n                ],\n                \"ip\": \"1.0.0.35\",\n                \"highlights\": [\n                    {\n                        \"matches\": [\n                            \"HTTP\"\n                        ],\n                        \"field\": \"service.service_name\"\n                    }\n                ]\n            },\n            {\n                \"services\": [\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 443\n                    },\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 80\n                    }\n                ],\n                \"ip\": \"1.0.0.36\",\n                \"highlights\": [\n                    {\n                        \"matches\": [\n                            \"HTTP\"\n                        ],\n                        \"field\": \"service.service_name\"\n                    }\n                ]\n            },\n            {\n                \"services\": [\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 443\n                    }\n                ],\n                \"ip\": \"1.0.0.37\",\n                \"highlights\": [\n                    {\n                        \"matches\": [\n                            \"HTTP\"\n                        ],\n                        \"field\": \"service.service_name\"\n                    }\n                ]\n            },\n            {\n                \"services\": [\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 443\n                    },\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 80\n                    }\n                ],\n                \"ip\": \"1.0.0.38\",\n                \"highlights\": [\n                    {\n                        \"matches\": [\n                            \"HTTP\"\n                        ],\n                        \"field\": \"service.service_name\"\n                    }\n                ]\n            },\n            {\n                \"services\": [\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 443\n                    },\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 80\n                    }\n                ],\n                \"ip\": \"1.0.0.39\",\n                \"highlights\": [\n                    {\n                        \"matches\": [\n                            \"HTTP\"\n                        ],\n                        \"field\": \"service.service_name\"\n                    }\n                ]\n            },\n            {\n                \"services\": [\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 443\n                    },\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 80\n                    }\n                ],\n                \"ip\": \"1.0.0.40\",\n                \"highlights\": [\n                    {\n                        \"matches\": [\n                            \"HTTP\"\n                        ],\n                        \"field\": \"service.service_name\"\n                    }\n                ]\n            },\n            {\n                \"services\": [\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 443\n                    }\n                ],\n                \"ip\": \"1.0.0.41\",\n                \"highlights\": [\n                    {\n                        \"matches\": [\n                            \"HTTP\"\n                        ],\n                        \"field\": \"service.service_name\"\n                    }\n                ]\n            },\n            {\n                \"services\": [\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 443\n                    }\n                ],\n                \"ip\": \"1.0.0.42\",\n                \"highlights\": [\n                    {\n                        \"matches\": [\n                            \"HTTP\"\n                        ],\n                        \"field\": \"service.service_name\"\n                    }\n                ]\n            },\n            {\n                \"services\": [\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 443\n                    },\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 80\n                    }\n                ],\n                \"ip\": \"1.0.0.43\",\n                \"highlights\": [\n                    {\n                        \"matches\": [\n                            \"HTTP\"\n                        ],\n                        \"field\": \"service.service_name\"\n                    }\n                ]\n            },\n            {\n                \"services\": [\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 443\n                    }\n                ],\n                \"ip\": \"1.0.0.44\",\n                \"highlights\": [\n                    {\n                        \"matches\": [\n                            \"HTTP\"\n                        ],\n                        \"field\": \"service.service_name\"\n                    }\n                ]\n            },\n            {\n                \"services\": [\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 443\n                    },\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 80\n                    }\n                ],\n                \"ip\": \"1.0.0.45\",\n                \"highlights\": [\n                    {\n                        \"matches\": [\n                            \"HTTP\"\n                        ],\n                        \"field\": \"service.service_name\"\n                    }\n                ]\n            },\n            {\n                \"services\": [\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 443\n                    },\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 80\n                    }\n                ],\n                \"ip\": \"1.0.0.46\",\n                \"highlights\": [\n                    {\n                        \"matches\": [\n                            \"HTTP\"\n                        ],\n                        \"field\": \"service.service_name\"\n                    }\n                ]\n            },\n            {\n                \"services\": [\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 443\n                    }\n                ],\n                \"ip\": \"1.0.0.47\",\n                \"highlights\": [\n                    {\n                        \"matches\": [\n                            \"HTTP\"\n                        ],\n                        \"field\": \"service.service_name\"\n                    }\n                ]\n            },\n            {\n                \"services\": [\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 80\n                    },\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 443\n                    }\n                ],\n                \"ip\": \"1.0.0.48\",\n                \"highlights\": [\n                    {\n                        \"matches\": [\n                            \"HTTP\"\n                        ],\n                        \"field\": \"service.service_name\"\n                    }\n                ]\n            },\n            {\n                \"services\": [\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 443\n                    },\n                    {\n                        \"service_name\": \"HTTP\",\n                        \"port\": 80\n                    }\n                ],\n                \"ip\": \"1.0.0.49\",\n                \"highlights\": [\n                    {\n                        \"matches\": [\n                            \"HTTP\"\n                        ],\n                        \"field\": \"service.service_name\"\n                    }\n                ]\n            }\n        ],\n        \"total\": 149575980,\n        \"links\": {\n            \"prev\": \"eyJBZnRlciI6WyIxIiwiMS4wLjAuMCJdLCJSZXZlcnNlIjp0cnVlfQ==\",\n            \"next\": \"eyJBZnRlciI6WyIxIiwiMS4wLjAuNDkiXSwiUmV2ZXJzZSI6ZmFsc2V9\"\n        }\n    }\n}"
+								}
+							]
 						},
 						{
 							"name": "Aggregate",
@@ -1301,7 +1473,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{BASE_URL}}/api/v2/hosts/search?field=services.port&q=service.service_name: HTTP&num_buckets=50",
+									"raw": "{{BASE_URL}}/api/v2/hosts/aggregate?field=services.port&q=service.service_name: HTTP&num_buckets=50",
 									"host": [
 										"{{BASE_URL}}"
 									],
@@ -1309,7 +1481,7 @@
 										"api",
 										"v2",
 										"hosts",
-										"search"
+										"aggregate"
 									],
 									"query": [
 										{
@@ -1330,7 +1502,97 @@
 									]
 								}
 							},
-							"response": []
+							"response": [
+								{
+									"name": "Aggregate",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{BASE_URL}}/api/v2/hosts/aggregate?field=services.port&q=service.service_name: HTTP&num_buckets=50",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"v2",
+												"hosts",
+												"aggregate"
+											],
+											"query": [
+												{
+													"key": "field",
+													"value": "services.port",
+													"description": "The maximum number of buckets used to generate aggregate results. The final number of buckets may be less than this number. Minimum of 1. If not specified, 50 buckets will be used by defualt."
+												},
+												{
+													"key": "q",
+													"value": "service.service_name: HTTP",
+													"description": "Query used to search for Hosts. Query uses the Censys Search Language."
+												},
+												{
+													"key": "num_buckets",
+													"value": "50",
+													"description": "The maximum number of buckets used to generate aggregate results. The final number of buckets may be less than this number. Minimum of 1. If not specified, 50 buckets will be used by defualt."
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Thu, 08 Apr 2021 20:50:45 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Strict-Transport-Security",
+											"value": "max-age=31536000; includeSubDomains; preload"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "CF-Cache-Status",
+											"value": "DYNAMIC"
+										},
+										{
+											"key": "Server",
+											"value": "cloudflare"
+										},
+										{
+											"key": "Content-Encoding",
+											"value": "br"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"status\": \"OK\",\n    \"code\": 200,\n    \"result\": {\n        \"total_omitted\": 358388380,\n        \"buckets\": [\n            {\n                \"count\": 47637476,\n                \"key\": \"80\"\n            },\n            {\n                \"count\": 35073802,\n                \"key\": \"443\"\n            },\n            {\n                \"count\": 17256198,\n                \"key\": \"7547\"\n            },\n            {\n                \"count\": 13216884,\n                \"key\": \"22\"\n            },\n            {\n                \"count\": 8364899,\n                \"key\": \"30005\"\n            },\n            {\n                \"count\": 6422723,\n                \"key\": \"8080\"\n            },\n            {\n                \"count\": 6136907,\n                \"key\": \"21\"\n            },\n            {\n                \"count\": 5653425,\n                \"key\": \"8089\"\n            },\n            {\n                \"count\": 5363198,\n                \"key\": \"7170\"\n            },\n            {\n                \"count\": 4966348,\n                \"key\": \"25\"\n            },\n            {\n                \"count\": 4767730,\n                \"key\": \"8008\"\n            },\n            {\n                \"count\": 4046975,\n                \"key\": \"8443\"\n            },\n            {\n                \"count\": 4009426,\n                \"key\": \"53\"\n            },\n            {\n                \"count\": 3958205,\n                \"key\": \"5060\"\n            },\n            {\n                \"count\": 3930374,\n                \"key\": \"143\"\n            },\n            {\n                \"count\": 3803626,\n                \"key\": \"993\"\n            },\n            {\n                \"count\": 3799774,\n                \"key\": \"110\"\n            },\n            {\n                \"count\": 3368728,\n                \"key\": \"995\"\n            },\n            {\n                \"count\": 3303067,\n                \"key\": \"4567\"\n            },\n            {\n                \"count\": 3238674,\n                \"key\": \"58000\"\n            },\n            {\n                \"count\": 3108309,\n                \"key\": \"51005\"\n            },\n            {\n                \"count\": 3095518,\n                \"key\": \"58603\"\n            },\n            {\n                \"count\": 2802680,\n                \"key\": \"587\"\n            },\n            {\n                \"count\": 2619877,\n                \"key\": \"47001\"\n            },\n            {\n                \"count\": 2473736,\n                \"key\": \"49152\"\n            },\n            {\n                \"count\": 2445732,\n                \"key\": \"8081\"\n            },\n            {\n                \"count\": 2431805,\n                \"key\": \"465\"\n            },\n            {\n                \"count\": 2409893,\n                \"key\": \"3389\"\n            },\n            {\n                \"count\": 2246244,\n                \"key\": \"3306\"\n            },\n            {\n                \"count\": 2184081,\n                \"key\": \"50001\"\n            },\n            {\n                \"count\": 2173390,\n                \"key\": \"8000\"\n            },\n            {\n                \"count\": 1996480,\n                \"key\": \"2082\"\n            },\n            {\n                \"count\": 1968907,\n                \"key\": \"5985\"\n            },\n            {\n                \"count\": 1953201,\n                \"key\": \"123\"\n            },\n            {\n                \"count\": 1949584,\n                \"key\": \"554\"\n            },\n            {\n                \"count\": 1946327,\n                \"key\": \"2086\"\n            },\n            {\n                \"count\": 1908812,\n                \"key\": \"2095\"\n            },\n            {\n                \"count\": 1882594,\n                \"key\": \"2083\"\n            },\n            {\n                \"count\": 1870092,\n                \"key\": \"1024\"\n            },\n            {\n                \"count\": 1862420,\n                \"key\": \"2096\"\n            },\n            {\n                \"count\": 1852846,\n                \"key\": \"2087\"\n            },\n            {\n                \"count\": 1710285,\n                \"key\": \"888\"\n            },\n            {\n                \"count\": 1640231,\n                \"key\": \"8888\"\n            },\n            {\n                \"count\": 1600771,\n                \"key\": \"8082\"\n            },\n            {\n                \"count\": 1592332,\n                \"key\": \"9080\"\n            },\n            {\n                \"count\": 1495883,\n                \"key\": \"8088\"\n            },\n            {\n                \"count\": 1491128,\n                \"key\": \"49502\"\n            },\n            {\n                \"count\": 1464294,\n                \"key\": \"2078\"\n            },\n            {\n                \"count\": 1445167,\n                \"key\": \"2077\"\n            },\n            {\n                \"count\": 1437326,\n                \"key\": \"8085\"\n            }\n        ],\n        \"potential_deviation\": 605118,\n        \"field\": \"services.port\",\n        \"query\": \"service.service_name: HTTP\",\n        \"total\": 149575980\n    }\n}"
+								}
+							]
 						}
 					]
 				}
