@@ -1214,7 +1214,7 @@
 									"query": [
 										{
 											"key": "at_time",
-											"value": "2021-03-01T17:49:05Z",
+											"value": "2021-04-02T17:49:05Z",
 											"description": "Fetches a host and its services at the given point in time. Requires historical API access.\nNanosecond precision is allowed.",
 											"disabled": true
 										}
@@ -1383,7 +1383,7 @@
 		},
 		{
 			"key": "BASE_URL",
-			"value": "https://censys.io"
+			"value": "https://search.censys.io"
 		}
 	]
 }
