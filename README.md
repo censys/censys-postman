@@ -35,5 +35,5 @@ All contributions (no matter how small) are always welcome.
 
 ## Authors
 
-Jose Nazario (@jnazarioCensys)
-Aidan Holland @thehappydinoa
+- Jose Nazario (@jnazarioCensys)
+- Aidan Holland (@thehappydinoa)
