@@ -462,7 +462,7 @@
 							]
 						},
 						{
-							"name": "Certificates viws",
+							"name": "Certificates view",
 							"request": {
 								"method": "GET",
 								"header": [
@@ -489,7 +489,7 @@
 							},
 							"response": [
 								{
-									"name": "Certificates viws",
+									"name": "Certificates view",
 									"originalRequest": {
 										"method": "GET",
 										"header": [
