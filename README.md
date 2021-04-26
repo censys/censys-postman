@@ -37,3 +37,9 @@ All contributions (no matter how small) are always welcome.
 
 - Jose Nazario (@jnazarioCensys)
 - Aidan Holland (@thehappydinoa)
+
+## License
+
+This software is licensed under [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0)
+
+- Copyright (C) 2021 Censys, Inc.
