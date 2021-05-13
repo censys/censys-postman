@@ -1,14 +1,14 @@
 # Censys Postman
 
-[![Postman Collection](https://img.shields.io/badge/Postman-Collection%20v2.1-orange)](https://www.python.org/downloads/)
-[![License](https://img.shields.io/github/license/censys/censys-postman)](LICENSE)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
+[![Postman Collection](https://img.shields.io/badge/Postman-Collection%20v2.1-orange?logo=postman)](https://www.python.org/downloads/)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-organge.svg?logo=git&logoColor=organge)](http://makeapullrequest.com)
+[![License](https://img.shields.io/github/license/censys/censys-postman?logo=apache)](LICENSE)
 
 A Postman collection for the Censys Search APIs.
 
-## How to use
+## Usage
 
-The Postman Collection file is a JSON containing all information about each request. This Collection is using Postman Environment Variables, so all you have to do is create an Environment at your Postman and register the Postman variables, which are:
+The Postman Collection file is a JSON file containing all information about each request. This Collection is using Postman Environment Variables, so all you have to do is create an Environment at your Postman and register the Postman variables, which are:
 
 - `CENSYS_API_ID`
 - `CENSYS_API_SECRET`
@@ -17,14 +17,13 @@ To learn more about Postman variables visit: [Postman Variables](https://learnin
 
 Once you register the required variables for your store, you will be able to use the whole Collection.
 
-## How do I know my API Credentials?
-
-In order to retrieve or create your private API Credentials, follow this [link](https://censys.io/account/api)
+API keys are required and can be retrieved from your [Censys account](https://search.censys.io/account/api). If you don't have an account, please [sign up for a account](https://search.censys.io/register) or [contact Censys sales](https://censys.io/contact-sales).
 
 ## Resources
 
-- [Official Website](https://censys.io/)
-- [Censys API Docs](https://censys.io/api)
+- [Censys Homepage](https://censys.io/)
+- [Censys Search](https://search.censys.io/)
+- [Censys Search API Docs](https://search.censys.io/api)
 - [Issue Tracker](https://github.com/censys/censys-postman/issues)
 - [Postman Documentation](https://learning.postman.com/docs/)
 - [Postman Environments](https://learning.postman.com/docs/sending-requests/managing-environments/)
