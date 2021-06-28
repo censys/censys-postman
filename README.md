@@ -4,20 +4,44 @@
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-organge.svg?logo=git&logoColor=organge)](http://makeapullrequest.com)
 [![License](https://img.shields.io/github/license/censys/censys-postman?logo=apache)](LICENSE)
 
-A Postman collection for the Censys Search APIs ([search.censys.io](https://search.censys.io/)).
+Postman collections for the Censys Search APIs ([search.censys.io](https://search.censys.io/)) and Censys Attack Surface Management APIs ([app.censys.io](https://app.censys.io))
 
 ## Usage
 
-The Postman Collection file is a JSON file containing all information about each request. This Collection can be imported into Postman. Once imported all you have to do is create an Environment in Postman and register these variables:
+The Postman Collections in this repo are JSON files containing information about the API calls available from Censys Search and Censys ASM. With these collections, you can use Postman to easily test and develop around Censys' APIs.
+
+### Import Collections
+
+To use these Collections, import them into the Postman app. Postman offers several options for import. Click the **Import** button in the Postman app and choose one of the options in the modal:
+
+* Connect to this code repository through Postman
+* Copy the URL of the raw files in this repo
+* Copy and paste the raw text of the Collection files into the modal
+
+![Postman Import Modal](images/postman_import_modal.png)
+
+### Set Up an Environment to Populate Collection Variables
+
+The Censys Collections contain calls that reference variables, particularly API credentials, which are required to authenticate every call. You can specify variables in a Postman Environment to reuse across calls.
+
+#### Censys Search
+
+Create a Censys Search Environment and add the following two variables as keys:
 
 - `CENSYS_API_ID`
 - `CENSYS_API_SECRET`
 
-To learn more about Postman variables visit: [Postman Variables](https://learning.postman.com/docs/sending-requests/variables/)
+![Create an Environment for Censys Search Variables](images/create_search_env.gif)
 
-Once you register the required variables in your env, you will be able to use those credentials across the whole Collection.
+Retrieve the values for these variables on the [Censys account](https://search.censys.io/account/api) page of the Search app. If you don't have an account, please [sign up for a free account](https://search.censys.io/register) or [contact Censys sales](https://censys.io/contact-sales).
 
-API keys are required and can be retrieved from your [Censys account](https://search.censys.io/account/api). If you don't have an account, please [sign up for a account](https://search.censys.io/register) or [contact Censys sales](https://censys.io/contact-sales).
+#### Censys ASM
+
+Create a Censys ASM environment and add the following variable as a key:
+
+- `censysApiKey`
+
+Retrieve the value for your Censys ASM API key from the [Integrations page](https://app.censys.io/integrations) of the Attack Surface Management web app and add it to the environment.
 
 ## Resources
 
