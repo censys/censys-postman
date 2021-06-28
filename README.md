@@ -14,9 +14,9 @@ The Postman Collections in this repo are JSON files containing information about
 
 To use these Collections, import them into the Postman app. Postman offers several options for import. Click the **Import** button in the Postman app and choose one of the options in the modal:
 
-* Connect to this code repository through Postman
-* Copy the URL of the raw files in this repo
-* Copy and paste the raw text of the Collection files into the modal
+- Connect to this code repository through Postman
+- Copy the URL of the raw files in this repo
+- Copy and paste the raw text of the Collection files into the modal
 
 ![Postman Import Modal](images/postman_import_modal.png)
 
@@ -47,6 +47,7 @@ Retrieve the value for your Censys ASM API key from the [Integrations page](http
 
 - [Censys Homepage](https://censys.io/)
 - [Censys Search API Docs](https://search.censys.io/api)
+- [Censys ASM API Docs](https://app.censys.io/api-docs)
 - [Issue Tracker](https://github.com/censys/censys-postman/issues)
 - [Postman Documentation](https://learning.postman.com/docs/)
 - [Postman Environments](https://learning.postman.com/docs/sending-requests/managing-environments/)
@@ -59,6 +60,7 @@ All contributions (no matter how small) are always welcome.
 
 - Jose Nazario (@jnazarioCensys)
 - Aidan Holland (@thehappydinoa)
+- Jessica (@jpsinnott)
 
 ## License
 
