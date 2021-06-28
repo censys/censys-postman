@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "b7f807ba-4ecb-410d-aa16-aed35e06dc19",
-		"name": "Censys",
+		"_postman_id": "a44f3815-b59a-4d59-9731-9bf7618840fd",
+		"name": "Censys Search",
 		"description": "# Introduction\n\nThe Censys REST API provides programmatic access to the same data accessible through the web interface. API access is governed by our Terms of Service and all scripted access should use this API. We list our API endpoints below.\n\n# Overview\n\nAll APIs return three main sections: status, results, and metadata about the request. \n\nWe also maintain a Python library for interacting with the API, which can be installed with Pip: `pip install censys`. \n\n# Authentication\n\nAll API endpoints are hosted at https://censys.io/api/ and require authenticating with HTTP basic auth using the API ID and secret that are shown under My Account. This page also lists the rate limits that apply to your account.\n\n# Error Codes\n\n* 400 BAD REQUEST - Your query could not be executed (e.g., query could not be parsed or timed out.) See error for more information.\n* 404 NOT FOUND - Specified search index was not valid.\n* 429 RATE LIMIT EXCEEDED - Your query was not executed because you have exceeded your specified rate limit.\n* 500 INTERNAL SERVER ERROR - An unexpected error occurred when trying to execute your query. Try again at a later time or contact us at support@censys.io if the problem persists.\n\n\n# Rate limit\n\nCensys rate limits to 10 queries a day per IP for unauthenticated clients, and variable numbers per day depending on your pricing tier.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
