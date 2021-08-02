@@ -1,6 +1,7 @@
 # Censys Postman
 
-[![Postman Collection](https://img.shields.io/badge/Postman-Collection%20v2.1-orange?logo=postman)](https://www.python.org/downloads/)
+[![Postman Collection](https://img.shields.io/badge/Postman-Collection%20v2.1-orange?logo=postman)](https://github.com/censys/censys-postman)
+![GitHub last commit](https://img.shields.io/github/last-commit/censys/censys-postman)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-organge.svg?logo=git&logoColor=organge)](http://makeapullrequest.com)
 [![License](https://img.shields.io/github/license/censys/censys-postman?logo=apache)](LICENSE)
 
@@ -16,6 +17,11 @@ To use these Collections, import them into the Postman app. Postman offers sever
 
 - Connect to this code repository through Postman
 - Copy the URL of the raw files in this repo
+
+    Search: `https://github.com/censys/censys-postman/blob/main/Censys_Search.postman_collection.json?raw=true`
+
+    ASM: `https://github.com/censys/censys-postman/blob/main/Censys_ASM.postman_collection.json?raw=true`
+
 - Copy and paste the raw text of the Collection files into the modal
 
 ![Postman Import Modal](images/postman_import_modal.png)
@@ -49,7 +55,8 @@ Retrieve the value for your Censys ASM API key from the [Integrations page](http
 - [Censys Search API Docs](https://search.censys.io/api)
 - [Censys ASM API Docs](https://app.censys.io/api-docs)
 - [Issue Tracker](https://github.com/censys/censys-postman/issues)
-- [Postman Documentation](https://learning.postman.com/docs/)
+- [Postman Documentation](https://learning.postman.com/docs/getting-started/introduction/)
+- [Postman Importing Collections](https://learning.postman.com/docs/getting-started/importing-and-exporting-data/#importing-data-into-postman)
 - [Postman Environments](https://learning.postman.com/docs/sending-requests/managing-environments/)
 
 ## Contributing
