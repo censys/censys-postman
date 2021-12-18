@@ -1179,7 +1179,7 @@
 					"name": "Hosts",
 					"item": [
 						{
-							"name": "View",
+							"name": "View a Host",
 							"event": [
 								{
 									"listen": "test",
@@ -1215,7 +1215,7 @@
 										{
 											"key": "at_time",
 											"value": "2021-04-02T17:49:05Z",
-											"description": "Fetches a host and its services at the given point in time. Requires historical API access.\nNanosecond precision is allowed.",
+											"description": "Retrieves a host as it was known to Censys at a given point in time. Requires historical API access\nNanosecond precision is allowed.",
 											"disabled": true
 										}
 									],
@@ -1226,7 +1226,8 @@
 											"description": "The IP Address of the requested host."
 										}
 									]
-								}
+								},
+								"description": "View a host as it is known to Censys currently or at a historical point in time."
 							},
 							"response": [
 								{
@@ -1319,7 +1320,7 @@
 							]
 						},
 						{
-							"name": "Search",
+							"name": "Search Hosts",
 							"event": [
 								{
 									"listen": "test",
@@ -1341,7 +1342,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{BASE_URL}}/api/v2/hosts/search?q=service.service_name: HTTP&per_page=50",
+									"raw": "{{BASE_URL}}/api/v2/hosts/search?q=service.service_name: HTTP&per_page=50&virtual_hosts=EXCLUDE",
 									"host": [
 										"{{BASE_URL}}"
 									],
@@ -1363,13 +1364,19 @@
 											"description": "The maximum number of Hits to show per API response. Minimum of 0. Maximum of 100. If not specified, 50 results will be returned by default."
 										},
 										{
+											"key": "virtual_hosts",
+											"value": "EXCLUDE",
+											"description": "Determine how to query Virtual Hosts. The default is EXCLUDE which will ignore any virtual hosts entries. When set to INCLUDE or ONLY virtual hosts will be present in the returned list of hits, with the later returning only virtual hosts."
+										},
+										{
 											"key": "cursor",
 											"value": "nextCursorToken",
 											"description": "Cursor token, when supplied, will fetch either the next or previous page of results matching the rest of the given query parameters.",
 											"disabled": true
 										}
 									]
-								}
+								},
+								"description": "Search for hosts using the Censys Search Language."
 							},
 							"response": [
 								{
@@ -1465,7 +1472,7 @@
 							]
 						},
 						{
-							"name": "Aggregate",
+							"name": "Aggregate Host Field Values",
 							"event": [
 								{
 									"listen": "test",
@@ -1514,7 +1521,8 @@
 											"description": "The maximum number of buckets used to generate aggregate results. The final number of buckets may be less than this number. Minimum of 1. If not specified, 50 buckets will be used by defualt."
 										}
 									]
-								}
+								},
+								"description": "Generate a report about the values for a specified field across all hosts matching a search."
 							},
 							"response": [
 								{
@@ -1609,7 +1617,7 @@
 							]
 						},
 						{
-							"name": "Names",
+							"name": "List Host Names",
 							"event": [
 								{
 									"listen": "test",
@@ -1657,7 +1665,8 @@
 											"description": "The IP Address of the requested host."
 										}
 									]
-								}
+								},
+								"description": "List all of the DNS-style names that this host responded to in a name-based scan."
 							},
 							"response": [
 								{
@@ -1751,7 +1760,7 @@
 							]
 						},
 						{
-							"name": "Diff",
+							"name": "Diff Hosts",
 							"event": [
 								{
 									"listen": "test",
@@ -1915,13 +1924,20 @@
 							]
 						},
 						{
-							"name": "Events (Experimental)",
+							"name": "List Host Events (Experimental)",
 							"event": [
 								{
 									"listen": "test",
 									"script": {
 										"exec": [
-											""
+											"var jsonData = JSON.parse(responseBody);",
+											"",
+											"tests[\"Next Cursor Created\"] = typeof jsonData.result.links.next != 'undefined'",
+											"",
+											"if(typeof jsonData.result.links.next != 'undefined') {",
+											"    postman.setEnvironmentVariable(\"cursor\", jsonData.result.links.next);",
+											"    tests[\"Cursor Set\"] = jsonData.result.links.next === postman.getEnvironmentVariable(\"cursor\");",
+											"}"
 										],
 										"type": "text/javascript"
 									}
@@ -1937,7 +1953,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{BASE_URL}}/api/v2/experimental/hosts/:ip/events",
+									"raw": "{{BASE_URL}}/api/v2/experimental/hosts/:ip/events?start_time=2021-05-27T21%3A34%3A37.310Z&end_time=2021-08-04T14:49:00.000Z&cursor={{cursor}}",
 									"host": [
 										"{{BASE_URL}}"
 									],
@@ -1952,15 +1968,13 @@
 									"query": [
 										{
 											"key": "start_time",
-											"value": "2021-07-02T17:49:05Z",
-											"description": "An optional RFC3339 timestamp which represents the beginning chronological point-in-time (inclusive) from which events are returned. This must always be earlier than end_time.\n\nIf not provided, this is assumed to be the historical API maximum.",
-											"disabled": true
+											"value": "2021-05-27T21%3A34%3A37.310Z",
+											"description": "An optional RFC3339 timestamp which represents the beginning chronological point-in-time (inclusive) from which events are returned. This must always be earlier than end_time.\n\nIf not provided, this is assumed to be the historical API maximum."
 										},
 										{
 											"key": "end_time",
-											"value": "2021-07-04T17:49:05Z",
-											"description": "An optional RFC3339 timestamp which represents the ending chronological point-in-time (exclusive) from which events are returned. This must always be later than start_time.\n\nIf not provided, this is assumed to be now.",
-											"disabled": true
+											"value": "2021-08-04T14:49:00.000Z",
+											"description": "An optional RFC3339 timestamp which represents the ending chronological point-in-time (exclusive) from which events are returned. This must always be later than start_time.\n\nIf not provided, this is assumed to be now."
 										},
 										{
 											"key": "per_page",
@@ -1970,22 +1984,30 @@
 										},
 										{
 											"key": "cursor",
-											"value": null,
-											"description": "Cursor token from the API response, which fetches the next or previous page of hits when added to the endpoint URL.",
-											"disabled": true
+											"value": "{{cursor}}",
+											"description": "Cursor token from the API response, which fetches the next or previous page of hits when added to the endpoint URL."
 										},
 										{
 											"key": "reversed",
 											"value": "true",
 											"description": "Reverse the order of the return events, that is, return events in reversed chronological order.",
 											"disabled": true
+										},
+										{
+											"key": "end_time",
+											"value": "2021-05-16T17:49:05Z",
+											"disabled": true
+										},
+										{
+											"key": "start_time",
+											"value": "2021-03-15T00:00:00Z",
+											"disabled": true
 										}
 									],
 									"variable": [
 										{
 											"key": "ip",
-											"value": "8.8.8.8",
-											"description": "The IP Address of the requested host."
+											"value": null
 										}
 									]
 								}
@@ -2103,6 +2125,462 @@
 									"body": "{\n    \"code\": 200,\n    \"status\": \"OK\",\n    \"result\": {\n        \"ip\": \"8.8.8.8\",\n        \"events\": [\n            {\n                \"timestamp\": \"2021-07-02T18:12:42.607Z\",\n                \"service_observed\": {\n                    \"id\": {\n                        \"port\": 53,\n                        \"transport_protocol\": \"UDP\",\n                        \"service_name\": \"DNS\"\n                    },\n                    \"observed_at\": \"2021-07-02T17:48:51.733212008Z\",\n                    \"perspective_id\": \"PERSPECTIVE_HE\"\n                },\n                \"_event\": \"service_observed\"\n            },\n            {\n                \"timestamp\": \"2021-07-02T18:18:11.243Z\",\n                \"service_observed\": {\n                    \"id\": {\n                        \"port\": 443,\n                        \"service_name\": \"HTTP\",\n                        \"transport_protocol\": \"TCP\"\n                    },\n                    \"observed_at\": \"2021-07-02T16:36:54.461302601Z\",\n                    \"perspective_id\": \"PERSPECTIVE_TELIA\",\n                    \"changed_fields\": [\n                        {\n                            \"field_name\": \"http.tls.certificates.leaf_data.fingerprint\"\n                        },\n                        {\n                            \"field_name\": \"certificate\"\n                        },\n                        {\n                            \"field_name\": \"http.tls.certificates.leaf_data.public_key.fingerprint\"\n                        },\n                        {\n                            \"field_name\": \"http.tls.certificates.leaf_fp_sha_256\"\n                        },\n                        {\n                            \"field_name\": \"http.tls.certificates.leaf_data.public_key.rsa.modulus\"\n                        },\n                        {\n                            \"field_name\": \"http.tls.certificates.leaf_data.tbs_fingerprint\"\n                        }\n                    ]\n                },\n                \"_event\": \"service_observed\"\n            },\n            {\n                \"timestamp\": \"2021-07-03T00:38:45.550Z\",\n                \"service_observed\": {\n                    \"id\": {\n                        \"port\": 53,\n                        \"transport_protocol\": \"UDP\",\n                        \"service_name\": \"DNS\"\n                    },\n                    \"observed_at\": \"2021-07-02T23:57:58.997965062Z\",\n                    \"perspective_id\": \"PERSPECTIVE_NTT\"\n                },\n                \"_event\": \"service_observed\"\n            },\n            {\n                \"timestamp\": \"2021-07-03T02:01:53.590Z\",\n                \"service_observed\": {\n                    \"id\": {\n                        \"port\": 443,\n                        \"service_name\": \"HTTP\",\n                        \"transport_protocol\": \"TCP\"\n                    },\n                    \"observed_at\": \"2021-07-02T23:16:49.153651367Z\",\n                    \"perspective_id\": \"PERSPECTIVE_HE\"\n                },\n                \"_event\": \"service_observed\"\n            },\n            {\n                \"timestamp\": \"2021-07-03T07:49:07.570Z\",\n                \"service_observed\": {\n                    \"id\": {\n                        \"port\": 53,\n                        \"transport_protocol\": \"UDP\",\n                        \"service_name\": \"DNS\"\n                    },\n                    \"observed_at\": \"2021-07-03T05:58:22.453486028Z\",\n                    \"perspective_id\": \"PERSPECTIVE_TELIA\"\n                },\n                \"_event\": \"service_observed\"\n            },\n            {\n                \"timestamp\": \"2021-07-03T08:50:02.868Z\",\n                \"service_observed\": {\n                    \"id\": {\n                        \"port\": 443,\n                        \"service_name\": \"HTTP\",\n                        \"transport_protocol\": \"TCP\"\n                    },\n                    \"observed_at\": \"2021-07-03T07:16:17.372430220Z\",\n                    \"perspective_id\": \"PERSPECTIVE_TELIA\"\n                },\n                \"_event\": \"service_observed\"\n            },\n            {\n                \"timestamp\": \"2021-07-03T12:06:32.986Z\",\n                \"service_observed\": {\n                    \"id\": {\n                        \"port\": 53,\n                        \"transport_protocol\": \"UDP\",\n                        \"service_name\": \"DNS\"\n                    },\n                    \"observed_at\": \"2021-07-03T12:04:50.800107038Z\",\n                    \"perspective_id\": \"PERSPECTIVE_HE\"\n                },\n                \"_event\": \"service_observed\"\n            },\n            {\n                \"timestamp\": \"2021-07-03T15:16:03.498Z\",\n                \"service_observed\": {\n                    \"id\": {\n                        \"port\": 443,\n                        \"service_name\": \"HTTP\",\n                        \"transport_protocol\": \"TCP\"\n                    },\n                    \"observed_at\": \"2021-07-03T13:54:46.599468402Z\",\n                    \"perspective_id\": \"PERSPECTIVE_HE\"\n                },\n                \"_event\": \"service_observed\"\n            },\n            {\n                \"timestamp\": \"2021-07-03T18:11:18.652Z\",\n                \"service_observed\": {\n                    \"id\": {\n                        \"port\": 53,\n                        \"transport_protocol\": \"UDP\",\n                        \"service_name\": \"DNS\"\n                    },\n                    \"observed_at\": \"2021-07-03T18:07:03.262392490Z\",\n                    \"perspective_id\": \"PERSPECTIVE_HE\"\n                },\n                \"_event\": \"service_observed\"\n            },\n            {\n                \"timestamp\": \"2021-07-03T22:09:55.893Z\",\n                \"service_observed\": {\n                    \"id\": {\n                        \"port\": 443,\n                        \"service_name\": \"HTTP\",\n                        \"transport_protocol\": \"TCP\"\n                    },\n                    \"observed_at\": \"2021-07-03T22:06:51.775834426Z\",\n                    \"perspective_id\": \"PERSPECTIVE_NTT\"\n                },\n                \"_event\": \"service_observed\"\n            },\n            {\n                \"timestamp\": \"2021-07-04T00:13:50.366Z\",\n                \"service_observed\": {\n                    \"id\": {\n                        \"port\": 53,\n                        \"transport_protocol\": \"UDP\",\n                        \"service_name\": \"DNS\"\n                    },\n                    \"observed_at\": \"2021-07-04T00:07:42.926324260Z\",\n                    \"perspective_id\": \"PERSPECTIVE_TELIA\"\n                },\n                \"_event\": \"service_observed\"\n            },\n            {\n                \"timestamp\": \"2021-07-04T04:17:57.924Z\",\n                \"service_observed\": {\n                    \"id\": {\n                        \"port\": 443,\n                        \"service_name\": \"HTTP\",\n                        \"transport_protocol\": \"TCP\"\n                    },\n                    \"observed_at\": \"2021-07-04T04:17:57.819570872Z\",\n                    \"perspective_id\": \"PERSPECTIVE_HE\"\n                },\n                \"_event\": \"service_observed\"\n            },\n            {\n                \"timestamp\": \"2021-07-04T06:07:44.549Z\",\n                \"service_observed\": {\n                    \"id\": {\n                        \"port\": 53,\n                        \"transport_protocol\": \"UDP\",\n                        \"service_name\": \"DNS\"\n                    },\n                    \"observed_at\": \"2021-07-04T06:07:44.425838149Z\",\n                    \"perspective_id\": \"PERSPECTIVE_HE\"\n                },\n                \"_event\": \"service_observed\"\n            },\n            {\n                \"timestamp\": \"2021-07-04T11:22:39.593Z\",\n                \"service_observed\": {\n                    \"id\": {\n                        \"port\": 443,\n                        \"service_name\": \"HTTP\",\n                        \"transport_protocol\": \"TCP\"\n                    },\n                    \"observed_at\": \"2021-07-04T11:22:39.367882429Z\",\n                    \"perspective_id\": \"PERSPECTIVE_HE\"\n                },\n                \"_event\": \"service_observed\"\n            },\n            {\n                \"timestamp\": \"2021-07-04T12:08:39.327Z\",\n                \"service_observed\": {\n                    \"id\": {\n                        \"port\": 53,\n                        \"transport_protocol\": \"UDP\",\n                        \"service_name\": \"DNS\"\n                    },\n                    \"observed_at\": \"2021-07-04T12:08:02.629872590Z\",\n                    \"perspective_id\": \"PERSPECTIVE_NTT\"\n                },\n                \"_event\": \"service_observed\"\n            }\n        ],\n        \"links\": {\n            \"next\": \"\"\n        }\n    }\n}"
 								}
 							]
+						},
+						{
+							"name": "Tag a Host",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/api/v2/hosts/:ip/tags/:id",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"hosts",
+										":ip",
+										"tags",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "ip",
+											"value": "{{ip}}",
+											"description": "The IP Address of the requested host."
+										},
+										{
+											"key": "id",
+											"value": "{{tagId}}",
+											"description": "The ID of the tag to be applied to the host."
+										}
+									]
+								},
+								"description": "View a host as it is known to Censys currently or at a historical point in time."
+							},
+							"response": [
+								{
+									"name": "Tag a Host",
+									"originalRequest": {
+										"method": "PUT",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{BASE_URL}}/api/v2/hosts/:ip/tags/:id",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"v2",
+												"hosts",
+												":ip",
+												"tags",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "ip",
+													"value": "2.206.80.166",
+													"description": "The IP Address of the requested host."
+												},
+												{
+													"key": "id",
+													"value": "630",
+													"description": "The ID of the tag to be applied to the host."
+												}
+											]
+										}
+									},
+									"status": "No Content",
+									"code": 204,
+									"_postman_previewlanguage": "plain",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Thu, 02 Dec 2021 01:59:07 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "Strict-Transport-Security",
+											"value": "max-age=31536000; includeSubDomains; preload"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Access-Control-Allow-Credentials",
+											"value": "true"
+										},
+										{
+											"key": "CF-Cache-Status",
+											"value": "DYNAMIC"
+										},
+										{
+											"key": "Expect-CT",
+											"value": "max-age=604800, report-uri=\"https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct\""
+										},
+										{
+											"key": "Report-To",
+											"value": "{\"endpoints\":[{\"url\":\"https:\\/\\/a.nel.cloudflare.com\\/report\\/v3?s=SHnt5dWITUhXGbJhYGu9Fn2z%2BmdLO7CQfmV1crc8Zlw7dJF0Szt1KfsAwh7TTSwBseTBxxYvmS8o3mUCz4sEudHFk6xeGdnTPH%2FAvC2HIWAYtVkUo%2BBvRoT%2BPL75fLVUH%2BM%3D\"}],\"group\":\"cf-nel\",\"max_age\":604800}"
+										},
+										{
+											"key": "NEL",
+											"value": "{\"success_fraction\":0,\"report_to\":\"cf-nel\",\"max_age\":604800}"
+										},
+										{
+											"key": "Server",
+											"value": "cloudflare"
+										},
+										{
+											"key": "CF-RAY",
+											"value": "6b70f43dcafd638c-ORD"
+										}
+									],
+									"cookie": [],
+									"body": null
+								}
+							]
+						},
+						{
+							"name": "List Host Tags",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/api/v2/hosts/:ip",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"hosts",
+										":ip"
+									],
+									"query": [
+										{
+											"key": "at_time",
+											"value": "2021-04-02T17:49:05Z",
+											"description": "Retrieves a host as it was known to Censys at a given point in time. Requires historical API access\nNanosecond precision is allowed.",
+											"disabled": true
+										}
+									],
+									"variable": [
+										{
+											"key": "ip",
+											"value": "{{tagId}}",
+											"description": "The IP Address of the requested host."
+										}
+									]
+								},
+								"description": "View a host as it is known to Censys currently or at a historical point in time."
+							},
+							"response": [
+								{
+									"name": "List Host Tags",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{BASE_URL}}/api/v2/hosts/:ip/tags",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"v2",
+												"hosts",
+												":ip",
+												"tags"
+											],
+											"query": [
+												{
+													"key": "at_time",
+													"value": "2021-04-02T17:49:05Z",
+													"description": "Retrieves a host as it was known to Censys at a given point in time. Requires historical API access\nNanosecond precision is allowed.",
+													"disabled": true
+												}
+											],
+											"variable": [
+												{
+													"key": "ip",
+													"value": "8.8.8.8",
+													"description": "The IP Address of the requested host."
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Thu, 02 Dec 2021 02:03:50 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Strict-Transport-Security",
+											"value": "max-age=31536000; includeSubDomains; preload"
+										},
+										{
+											"key": "Access-Control-Allow-Credentials",
+											"value": "true"
+										},
+										{
+											"key": "CF-Cache-Status",
+											"value": "DYNAMIC"
+										},
+										{
+											"key": "Expect-CT",
+											"value": "max-age=604800, report-uri=\"https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct\""
+										},
+										{
+											"key": "Report-To",
+											"value": "{\"endpoints\":[{\"url\":\"https:\\/\\/a.nel.cloudflare.com\\/report\\/v3?s=kXHtjbnyzKBxmhzkw88v%2B6Pw3fokSjPfZek0vi60%2B3PFcl%2FEMub6P0%2FddFjt7W51yIp7Nluo9IPeRokqWlbkpMj%2FzRQV8DLTXtJgOXPmE8KkdXSnK1CoylLAE0Rt5UmO%2BxA%3D\"}],\"group\":\"cf-nel\",\"max_age\":604800}"
+										},
+										{
+											"key": "NEL",
+											"value": "{\"success_fraction\":0,\"report_to\":\"cf-nel\",\"max_age\":604800}"
+										},
+										{
+											"key": "Server",
+											"value": "cloudflare"
+										},
+										{
+											"key": "CF-RAY",
+											"value": "6b70fb27eee7638c-ORD"
+										},
+										{
+											"key": "Content-Encoding",
+											"value": "br"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"code\": 200,\n    \"status\": \"OK\",\n    \"result\": {\n        \"ip\": \"8.8.8.8\",\n        \"tags\": [\n            {\n                \"id\": \"78\",\n                \"name\": \"Google\",\n                \"metadata\": {\n                    \"color\": \"4704c3\"\n                },\n                \"tagged_at\": \"2021-09-17T18:32:26.301667Z\"\n            }\n        ]\n    }\n}"
+								}
+							]
+						},
+						{
+							"name": "Untag a Host",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/api/v2/hosts/:ip/tags/:id",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"hosts",
+										":ip",
+										"tags",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "ip",
+											"value": "{{ip}}",
+											"description": "The IP Address of the requested host."
+										},
+										{
+											"key": "id",
+											"value": "{{tagId}}",
+											"description": "The ID of the tag to be applied to the host."
+										}
+									]
+								},
+								"description": "View a host as it is known to Censys currently or at a historical point in time."
+							},
+							"response": [
+								{
+									"name": "Untag a Host",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{BASE_URL}}/api/v2/hosts/:ip/tags/:id",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"v2",
+												"hosts",
+												":ip",
+												"tags",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "ip",
+													"value": "2.206.80.166",
+													"description": "The IP Address of the requested host."
+												},
+												{
+													"key": "id",
+													"value": "630",
+													"description": "The ID of the tag to be applied to the host."
+												}
+											]
+										}
+									},
+									"status": "No Content",
+									"code": 204,
+									"_postman_previewlanguage": "plain",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Thu, 02 Dec 2021 01:58:42 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "Strict-Transport-Security",
+											"value": "max-age=31536000; includeSubDomains; preload"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Access-Control-Allow-Credentials",
+											"value": "true"
+										},
+										{
+											"key": "CF-Cache-Status",
+											"value": "DYNAMIC"
+										},
+										{
+											"key": "Expect-CT",
+											"value": "max-age=604800, report-uri=\"https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct\""
+										},
+										{
+											"key": "Report-To",
+											"value": "{\"endpoints\":[{\"url\":\"https:\\/\\/a.nel.cloudflare.com\\/report\\/v3?s=C4iGMy9MolZBHcr8pX9%2FEnLNcZVsKGA9bJy8PtmKdAwA4nU0fYBiMVy1mghJrJOfx%2BUQyMmHtL5cMFd64mDDVSgGMCSgNZF08AS%2Fm4KJpr5fFjf0k5rJX7OGPuPIzw3EOo0%3D\"}],\"group\":\"cf-nel\",\"max_age\":604800}"
+										},
+										{
+											"key": "NEL",
+											"value": "{\"success_fraction\":0,\"report_to\":\"cf-nel\",\"max_age\":604800}"
+										},
+										{
+											"key": "Server",
+											"value": "cloudflare"
+										},
+										{
+											"key": "CF-RAY",
+											"value": "6b70f3a07e1a638c-ORD"
+										}
+									],
+									"cookie": [],
+									"body": null
+								}
+							]
 						}
 					]
 				},
@@ -2115,7 +2593,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{BASE_URL}}/api/v2/certificates/:fp/hosts",
+									"raw": "{{BASE_URL}}/api/v2/certificates/:fingerprint/hosts",
 									"host": [
 										"{{BASE_URL}}"
 									],
@@ -2123,7 +2601,7 @@
 										"api",
 										"v2",
 										"certificates",
-										":fp",
+										":fingerprint",
 										"hosts"
 									],
 									"query": [
@@ -2136,12 +2614,13 @@
 									],
 									"variable": [
 										{
-											"key": "fp",
-											"value": "fb444eb8e68437bae06232b9f5091bccff62a768ca09e92eb5c9c2cf9d17c426",
+											"key": "fingerprint",
+											"value": "643bc8701cb862b7b7903b8ddb653f1636998a1d2a53f4814abde1a1958f5b6f",
 											"description": "The SHA-256 fingerprint of the requested certificate."
 										}
 									]
-								}
+								},
+								"description": "List all of the hosts that are currently presenting the certificate specified in the path during a TLS handshake with Censys."
 							},
 							"response": [
 								{
@@ -2150,7 +2629,7 @@
 										"method": "GET",
 										"header": [],
 										"url": {
-											"raw": "{{BASE_URL}}/api/v2/certificates/:fp/hosts",
+											"raw": "{{BASE_URL}}/api/v2/certificates/:fingerprint/hosts",
 											"host": [
 												"{{BASE_URL}}"
 											],
@@ -2158,7 +2637,7 @@
 												"api",
 												"v2",
 												"certificates",
-												":fp",
+												":fingerprint",
 												"hosts"
 											],
 											"query": [
@@ -2171,7 +2650,7 @@
 											],
 											"variable": [
 												{
-													"key": "fp",
+													"key": "fingerprint",
 													"value": "fb444eb8e68437bae06232b9f5091bccff62a768ca09e92eb5c9c2cf9d17c426",
 													"description": "The SHA-256 fingerprint of the requested certificate."
 												}
@@ -2227,6 +2706,282 @@
 									"body": "{\n    \"code\": 200,\n    \"status\": \"OK\",\n    \"result\": {\n        \"fp\": \"fb444eb8e68437bae06232b9f5091bccff62a768ca09e92eb5c9c2cf9d17c426\",\n        \"hosts\": [\n            {\n                \"observed_at\": \"2021-07-30T17:43:22.735736168Z\",\n                \"ip\": \"1.0.0.1\"\n            },\n            {\n                \"observed_at\": \"2021-07-30T02:18:03.876488653Z\",\n                \"ip\": \"1.0.0.1\",\n                \"name\": \"han.888765.xyz\"\n            },\n            {\n                \"observed_at\": \"2021-07-30T01:39:24.626268816Z\",\n                \"ip\": \"1.0.0.1\",\n                \"name\": \"l.certwifi.com\"\n            },\n            {\n                \"observed_at\": \"2021-07-30T18:53:12.548860735Z\",\n                \"ip\": \"1.1.1.1\"\n            },\n            {\n                \"observed_at\": \"2021-07-30T05:32:32.614795024Z\",\n                \"first_observed_at\": \"2021-07-21T14:52:27.031518276Z\",\n                \"ip\": \"1.1.1.1\",\n                \"name\": \"abuk-04.serveminecraft.net\"\n            },\n            {\n                \"observed_at\": \"2021-07-18T00:03:49.119660076Z\",\n                \"first_observed_at\": \"2021-07-18T00:03:49.119660076Z\",\n                \"ip\": \"1.1.1.1\",\n                \"name\": \"birdviewing1.com\"\n            },\n            {\n                \"observed_at\": \"2021-07-23T17:33:00.005728302Z\",\n                \"first_observed_at\": \"2021-07-23T17:33:00.005728302Z\",\n                \"ip\": \"1.1.1.1\",\n                \"name\": \"code.brunka.net\"\n            },\n            {\n                \"observed_at\": \"2021-07-23T00:05:29.979509708Z\",\n                \"first_observed_at\": \"2021-07-16T00:05:37.791775378Z\",\n                \"ip\": \"1.1.1.1\",\n                \"name\": \"designtekgroup.org\"\n            },\n            {\n                \"observed_at\": \"2021-07-30T00:05:48.502931636Z\",\n                \"first_observed_at\": \"2021-07-30T00:05:48.502931636Z\",\n                \"ip\": \"1.1.1.1\",\n                \"name\": \"eplf.gov.ie\"\n            },\n            {\n                \"observed_at\": \"2021-07-24T07:35:42.449909582Z\",\n                \"first_observed_at\": \"2021-07-23T09:33:45.152769966Z\",\n                \"ip\": \"1.1.1.1\",\n                \"name\": \"facsso1-test.fortinet.com\"\n            },\n            {\n                \"observed_at\": \"2021-07-30T18:31:38.554187130Z\",\n                \"ip\": \"1.1.1.1\",\n                \"name\": \"frankhinek.com\"\n            },\n            {\n                \"observed_at\": \"2021-07-30T00:01:09.883980014Z\",\n                \"ip\": \"1.1.1.1\",\n                \"name\": \"getshifter.net\"\n            },\n            {\n                \"observed_at\": \"2021-07-26T00:01:50.543596321Z\",\n                \"ip\": \"1.1.1.1\",\n                \"name\": \"gfxdomain.net\"\n            },\n            {\n                \"observed_at\": \"2021-07-21T00:06:46.565621356Z\",\n                \"first_observed_at\": \"2021-07-10T00:05:54.426560017Z\",\n                \"ip\": \"1.1.1.1\",\n                \"name\": \"goctruyen88.com\"\n            },\n            {\n                \"observed_at\": \"2021-07-20T00:03:17.710080260Z\",\n                \"first_observed_at\": \"2021-07-20T00:03:17.710080260Z\",\n                \"ip\": \"1.1.1.1\",\n                \"name\": \"goodoffrs.com\"\n            },\n            {\n                \"observed_at\": \"2021-07-28T00:05:35.097722183Z\",\n                \"first_observed_at\": \"2021-07-28T00:05:35.097722183Z\",\n                \"ip\": \"1.1.1.1\",\n                \"name\": \"icybernet.vn\"\n            },\n            {\n                \"observed_at\": \"2021-07-27T00:04:30.287774111Z\",\n                \"first_observed_at\": \"2021-07-25T00:03:36.167354668Z\",\n                \"ip\": \"1.1.1.1\",\n                \"name\": \"ip2me.com.au\"\n            },\n            {\n                \"observed_at\": \"2021-07-23T00:06:06.395351592Z\",\n                \"first_observed_at\": \"2021-07-23T00:06:06.395351592Z\",\n                \"ip\": \"1.1.1.1\",\n                \"name\": \"itosoft.ir\"\n            },\n            {\n                \"observed_at\": \"2021-07-30T00:04:53.615280898Z\",\n                \"ip\": \"1.1.1.1\",\n                \"name\": \"kbis.ir\"\n            },\n            {\n                \"observed_at\": \"2021-07-21T00:05:32.717073743Z\",\n                \"first_observed_at\": \"2021-07-21T00:05:32.717073743Z\",\n                \"ip\": \"1.1.1.1\",\n                \"name\": \"kvrwd8r.com\"\n            },\n            {\n                \"observed_at\": \"2021-07-24T00:05:01.778204132Z\",\n                \"first_observed_at\": \"2021-07-13T00:03:08.122883069Z\",\n                \"ip\": \"1.1.1.1\",\n                \"name\": \"memocod.com\"\n            },\n            {\n                \"observed_at\": \"2021-07-17T00:06:09.903049216Z\",\n                \"first_observed_at\": \"2021-07-17T00:06:09.903049216Z\",\n                \"ip\": \"1.1.1.1\",\n                \"name\": \"minitext8.com\"\n            },\n            {\n                \"observed_at\": \"2021-07-28T19:22:32.415252267Z\",\n                \"ip\": \"1.1.1.1\",\n                \"name\": \"mms.qcloudwaf.com\"\n            },\n            {\n                \"observed_at\": \"2021-07-30T00:02:40.295372887Z\",\n                \"ip\": \"1.1.1.1\",\n                \"name\": \"myserviceaccount.com\"\n            },\n            {\n                \"observed_at\": \"2021-07-24T00:04:37.641054775Z\",\n                \"first_observed_at\": \"2021-07-24T00:04:37.641054775Z\",\n                \"ip\": \"1.1.1.1\",\n                \"name\": \"neolab.vn\"\n            },\n            {\n                \"observed_at\": \"2021-07-21T00:05:17.237463772Z\",\n                \"first_observed_at\": \"2021-07-21T00:05:17.237463772Z\",\n                \"ip\": \"1.1.1.1\",\n                \"name\": \"newsandrelieftips.com\"\n            },\n            {\n                \"observed_at\": \"2021-07-30T01:45:08.524155842Z\",\n                \"ip\": \"1.1.1.1\",\n                \"name\": \"newyx-img.577hau.cn\"\n            },\n            {\n                \"observed_at\": \"2021-07-25T00:02:31.547488497Z\",\n                \"first_observed_at\": \"2021-07-25T00:02:31.547488497Z\",\n                \"ip\": \"1.1.1.1\",\n                \"name\": \"orenciaregistration.com\"\n            },\n            {\n                \"observed_at\": \"2021-07-16T00:02:53.630724505Z\",\n                \"first_observed_at\": \"2021-07-15T00:03:36.168177189Z\",\n                \"ip\": \"1.1.1.1\",\n                \"name\": \"pca-cal.ca\"\n            },\n            {\n                \"observed_at\": \"2021-07-16T00:04:56.701947788Z\",\n                \"first_observed_at\": \"2021-07-15T00:06:58.969260698Z\",\n                \"ip\": \"1.1.1.1\",\n                \"name\": \"pubibqy.com\"\n            },\n            {\n                \"observed_at\": \"2021-07-19T00:03:10.505217564Z\",\n                \"ip\": \"1.1.1.1\",\n                \"name\": \"sachnoiconggiao.com\"\n            },\n            {\n                \"observed_at\": \"2021-07-20T00:05:19.475925205Z\",\n                \"first_observed_at\": \"2021-07-20T00:05:19.475925205Z\",\n                \"ip\": \"1.1.1.1\",\n                \"name\": \"save.my.id\"\n            },\n            {\n                \"observed_at\": \"2021-07-21T00:05:03.566726551Z\",\n                \"first_observed_at\": \"2021-07-21T00:05:03.566726551Z\",\n                \"ip\": \"1.1.1.1\",\n                \"name\": \"shilladutyfree.com\"\n            },\n            {\n                \"observed_at\": \"2021-07-20T00:05:20.430073688Z\",\n                \"first_observed_at\": \"2021-07-15T00:06:46.549259929Z\",\n                \"ip\": \"1.1.1.1\",\n                \"name\": \"shop.my.id\"\n            },\n            {\n                \"observed_at\": \"2021-07-23T00:06:15.724192456Z\",\n                \"first_observed_at\": \"2021-07-23T00:06:15.724192456Z\",\n                \"ip\": \"1.1.1.1\",\n                \"name\": \"squry.com\"\n            },\n            {\n                \"observed_at\": \"2021-07-26T00:03:14.329604116Z\",\n                \"ip\": \"1.1.1.1\",\n                \"name\": \"sreday.xyz\"\n            },\n            {\n                \"observed_at\": \"2021-07-25T03:52:50.573499526Z\",\n                \"first_observed_at\": \"2021-07-25T03:52:50.573499526Z\",\n                \"ip\": \"1.1.1.1\",\n                \"name\": \"static.hqz.com\"\n            },\n            {\n                \"observed_at\": \"2021-07-28T00:02:19.710458155Z\",\n                \"first_observed_at\": \"2021-07-24T00:02:08.869137536Z\",\n                \"ip\": \"1.1.1.1\",\n                \"name\": \"stoqman.com\"\n            },\n            {\n                \"observed_at\": \"2021-07-30T00:03:44.549643979Z\",\n                \"first_observed_at\": \"2021-07-30T00:03:44.549643979Z\",\n                \"ip\": \"1.1.1.1\",\n                \"name\": \"techcs.io\"\n            },\n            {\n                \"observed_at\": \"2021-07-28T19:09:47.791631053Z\",\n                \"first_observed_at\": \"2021-07-26T00:34:03.310359600Z\",\n                \"ip\": \"1.1.1.1\",\n                \"name\": \"thesavingseekers.com\"\n            },\n            {\n                \"observed_at\": \"2021-07-20T00:05:24.952263802Z\",\n                \"first_observed_at\": \"2021-07-14T00:05:26.273822644Z\",\n                \"ip\": \"1.1.1.1\",\n                \"name\": \"url.my.id\"\n            },\n            {\n                \"observed_at\": \"2021-07-30T00:04:10.777105127Z\",\n                \"first_observed_at\": \"2021-07-30T00:04:10.777105127Z\",\n                \"ip\": \"1.1.1.1\",\n                \"name\": \"valist.dev\"\n            },\n            {\n                \"observed_at\": \"2021-07-25T00:05:09.957848933Z\",\n                \"ip\": \"1.1.1.1\",\n                \"name\": \"vnative.net\"\n            },\n            {\n                \"observed_at\": \"2021-07-30T17:58:00.192977484Z\",\n                \"first_observed_at\": \"2021-07-18T02:53:09.595136783Z\",\n                \"ip\": \"1.1.1.1\",\n                \"name\": \"www.bob0923.com\"\n            },\n            {\n                \"observed_at\": \"2021-07-29T21:16:37.617412352Z\",\n                \"ip\": \"1.1.1.1\",\n                \"name\": \"www.citidana.com\"\n            },\n            {\n                \"observed_at\": \"2021-07-30T12:22:09.740564697Z\",\n                \"ip\": \"1.1.1.1\",\n                \"name\": \"www.ecostreaminfotech.com\"\n            },\n            {\n                \"observed_at\": \"2021-07-30T14:36:56.637251286Z\",\n                \"ip\": \"1.1.1.1\",\n                \"name\": \"www.eis.edu.my\"\n            },\n            {\n                \"observed_at\": \"2021-07-29T15:09:40.532613431Z\",\n                \"first_observed_at\": \"2021-07-28T06:23:14.471903220Z\",\n                \"ip\": \"1.163.235.241\"\n            },\n            {\n                \"observed_at\": \"2021-07-29T10:00:42.611137322Z\",\n                \"first_observed_at\": \"2021-07-28T06:42:22.293228723Z\",\n                \"ip\": \"1.169.103.27\"\n            },\n            {\n                \"observed_at\": \"2021-07-30T02:57:59.648543630Z\",\n                \"ip\": \"1.215.90.26\"\n            },\n            {\n                \"observed_at\": \"2021-07-30T07:05:28.071190361Z\",\n                \"ip\": \"1.215.194.42\"\n            },\n            {\n                \"observed_at\": \"2021-07-28T19:15:56.814010301Z\",\n                \"first_observed_at\": \"2021-07-28T19:15:56.814010301Z\",\n                \"ip\": \"3.15.220.209\"\n            },\n            {\n                \"observed_at\": \"2021-07-29T22:51:34.131676836Z\",\n                \"first_observed_at\": \"2021-07-29T22:51:34.131676836Z\",\n                \"ip\": \"3.21.247.94\"\n            },\n            {\n                \"observed_at\": \"2021-07-30T09:25:37.430702842Z\",\n                \"first_observed_at\": \"2021-07-30T09:25:37.430702842Z\",\n                \"ip\": \"3.65.60.23\"\n            },\n            {\n                \"observed_at\": \"2021-07-30T09:36:26.375573420Z\",\n                \"first_observed_at\": \"2021-07-30T09:36:26.375573420Z\",\n                \"ip\": \"3.66.29.33\"\n            },\n            {\n                \"observed_at\": \"2021-07-30T15:48:42.123137863Z\",\n                \"first_observed_at\": \"2021-07-30T15:48:42.123137863Z\",\n                \"ip\": \"3.66.29.224\"\n            },\n            {\n                \"observed_at\": \"2021-07-30T13:14:31.026052056Z\",\n                \"first_observed_at\": \"2021-07-30T13:14:31.026052056Z\",\n                \"ip\": \"3.67.132.220\"\n            },\n            {\n                \"observed_at\": \"2021-07-30T13:44:21.515980696Z\",\n                \"first_observed_at\": \"2021-07-30T13:44:21.515980696Z\",\n                \"ip\": \"3.67.193.169\"\n            },\n            {\n                \"observed_at\": \"2021-07-30T03:31:00.379041779Z\",\n                \"first_observed_at\": \"2021-07-30T03:31:00.379041779Z\",\n                \"ip\": \"3.67.194.209\"\n            },\n            {\n                \"observed_at\": \"2021-07-29T16:46:39.372137538Z\",\n                \"first_observed_at\": \"2021-07-29T16:46:39.372137538Z\",\n                \"ip\": \"3.68.89.195\"\n            },\n            {\n                \"observed_at\": \"2021-07-30T03:47:37.402243480Z\",\n                \"first_observed_at\": \"2021-07-30T03:47:37.402243480Z\",\n                \"ip\": \"3.68.150.240\"\n            },\n            {\n                \"observed_at\": \"2021-07-30T16:13:57.108270584Z\",\n                \"first_observed_at\": \"2021-07-30T16:13:57.108270584Z\",\n                \"ip\": \"3.68.217.159\"\n            },\n            {\n                \"observed_at\": \"2021-07-30T13:49:45.373388425Z\",\n                \"first_observed_at\": \"2021-07-30T13:49:45.373388425Z\",\n                \"ip\": \"3.68.218.253\"\n            },\n            {\n                \"observed_at\": \"2021-07-30T14:16:47.894683574Z\",\n                \"first_observed_at\": \"2021-07-30T14:16:47.894683574Z\",\n                \"ip\": \"3.81.95.180\"\n            },\n            {\n                \"observed_at\": \"2021-07-30T11:07:02.113358686Z\",\n                \"first_observed_at\": \"2021-07-30T11:07:02.113358686Z\",\n                \"ip\": \"3.84.78.73\"\n            },\n            {\n                \"observed_at\": \"2021-07-29T12:35:08.597540554Z\",\n                \"first_observed_at\": \"2021-07-29T12:35:08.597540554Z\",\n                \"ip\": \"3.84.230.2\"\n            },\n            {\n                \"observed_at\": \"2021-07-29T13:50:31.979293985Z\",\n                \"first_observed_at\": \"2021-07-29T13:50:31.979293985Z\",\n                \"ip\": \"3.84.246.35\"\n            },\n            {\n                \"observed_at\": \"2021-07-30T15:53:48.068344197Z\",\n                \"first_observed_at\": \"2021-07-30T15:53:48.068344197Z\",\n                \"ip\": \"3.86.4.176\"\n            },\n            {\n                \"observed_at\": \"2021-07-29T12:53:02.986621381Z\",\n                \"first_observed_at\": \"2021-07-29T12:53:02.986621381Z\",\n                \"ip\": \"3.86.56.80\"\n            },\n            {\n                \"observed_at\": \"2021-07-30T10:46:24.187557099Z\",\n                \"first_observed_at\": \"2021-07-30T10:46:24.187557099Z\",\n                \"ip\": \"3.88.136.211\"\n            },\n            {\n                \"observed_at\": \"2021-07-30T03:29:16.792558196Z\",\n                \"first_observed_at\": \"2021-07-30T03:29:16.792558196Z\",\n                \"ip\": \"3.91.92.137\"\n            },\n            {\n                \"observed_at\": \"2021-07-29T10:37:06.525475993Z\",\n                \"first_observed_at\": \"2021-07-29T10:37:06.525475993Z\",\n                \"ip\": \"3.94.205.200\"\n            },\n            {\n                \"observed_at\": \"2021-07-30T10:59:38.879628077Z\",\n                \"first_observed_at\": \"2021-07-30T10:59:38.879628077Z\",\n                \"ip\": \"3.95.236.82\"\n            },\n            {\n                \"observed_at\": \"2021-07-28T15:59:56.245283206Z\",\n                \"first_observed_at\": \"2021-07-28T15:59:56.245283206Z\",\n                \"ip\": \"3.120.148.220\"\n            },\n            {\n                \"observed_at\": \"2021-07-28T15:22:46.466488787Z\",\n                \"first_observed_at\": \"2021-07-28T15:22:46.466488787Z\",\n                \"ip\": \"3.125.8.78\"\n            },\n            {\n                \"observed_at\": \"2021-07-29T14:29:22.517864090Z\",\n                \"first_observed_at\": \"2021-07-29T14:29:22.517864090Z\",\n                \"ip\": \"3.125.9.63\"\n            },\n            {\n                \"observed_at\": \"2021-07-29T10:54:51.980091955Z\",\n                \"first_observed_at\": \"2021-07-29T10:54:51.980091955Z\",\n                \"ip\": \"3.125.34.108\"\n            },\n            {\n                \"observed_at\": \"2021-07-29T08:21:35.523411660Z\",\n                \"first_observed_at\": \"2021-07-29T08:21:35.523411660Z\",\n                \"ip\": \"3.126.231.40\"\n            },\n            {\n                \"observed_at\": \"2021-07-30T05:30:05.685569992Z\",\n                \"first_observed_at\": \"2021-07-30T05:30:05.685569992Z\",\n                \"ip\": \"3.127.215.163\"\n            },\n            {\n                \"observed_at\": \"2021-07-30T12:41:40.681625878Z\",\n                \"first_observed_at\": \"2021-07-30T12:41:40.681625878Z\",\n                \"ip\": \"3.129.69.147\"\n            },\n            {\n                \"observed_at\": \"2021-07-30T15:22:12.647573281Z\",\n                \"first_observed_at\": \"2021-07-30T15:22:12.647573281Z\",\n                \"ip\": \"3.138.122.159\"\n            },\n            {\n                \"observed_at\": \"2021-07-28T19:56:49.502712272Z\",\n                \"first_observed_at\": \"2021-07-28T19:56:49.502712272Z\",\n                \"ip\": \"3.139.86.208\"\n            },\n            {\n                \"observed_at\": \"2021-07-29T00:34:13.798252443Z\",\n                \"first_observed_at\": \"2021-07-29T00:34:13.798252443Z\",\n                \"ip\": \"3.143.204.115\"\n            },\n            {\n                \"observed_at\": \"2021-07-29T18:16:53.756240155Z\",\n                \"first_observed_at\": \"2021-07-29T18:16:53.756240155Z\",\n                \"ip\": \"3.144.20.181\"\n            },\n            {\n                \"observed_at\": \"2021-07-28T15:13:27.775174661Z\",\n                \"first_observed_at\": \"2021-07-28T15:13:27.775174661Z\",\n                \"ip\": \"3.144.37.180\"\n            },\n            {\n                \"observed_at\": \"2021-07-28T21:52:41.146474180Z\",\n                \"first_observed_at\": \"2021-07-28T21:52:41.146474180Z\",\n                \"ip\": \"3.215.153.37\"\n            },\n            {\n                \"observed_at\": \"2021-07-29T09:06:04.110381319Z\",\n                \"first_observed_at\": \"2021-07-29T09:06:04.110381319Z\",\n                \"ip\": \"3.219.216.83\"\n            },\n            {\n                \"observed_at\": \"2021-07-29T20:49:26.759702199Z\",\n                \"ip\": \"3.224.143.110\"\n            },\n            {\n                \"observed_at\": \"2021-07-30T06:15:16.673277194Z\",\n                \"first_observed_at\": \"2021-07-30T06:15:16.673277194Z\",\n                \"ip\": \"3.231.60.254\"\n            },\n            {\n                \"observed_at\": \"2021-07-19T07:13:35.160386458Z\",\n                \"first_observed_at\": \"2021-07-19T07:13:35.160386458Z\",\n                \"ip\": \"3.234.141.250\"\n            },\n            {\n                \"observed_at\": \"2021-07-30T15:11:11.075721312Z\",\n                \"first_observed_at\": \"2021-07-30T15:11:11.075721312Z\",\n                \"ip\": \"3.235.68.22\"\n            },\n            {\n                \"observed_at\": \"2021-07-30T07:50:37.367637377Z\",\n                \"first_observed_at\": \"2021-07-30T07:50:37.367637377Z\",\n                \"ip\": \"3.235.135.168\"\n            },\n            {\n                \"observed_at\": \"2021-07-30T10:42:09.973145655Z\",\n                \"first_observed_at\": \"2021-07-30T10:42:09.973145655Z\",\n                \"ip\": \"3.236.194.155\"\n            },\n            {\n                \"observed_at\": \"2021-07-21T22:52:15.334705348Z\",\n                \"first_observed_at\": \"2021-07-21T22:52:15.334705348Z\",\n                \"ip\": \"3.238.66.175\"\n            },\n            {\n                \"observed_at\": \"2021-07-29T01:30:41.431401224Z\",\n                \"first_observed_at\": \"2021-07-29T01:30:41.431401224Z\",\n                \"ip\": \"3.238.189.87\"\n            },\n            {\n                \"observed_at\": \"2021-07-28T13:15:24.374870531Z\",\n                \"first_observed_at\": \"2021-07-28T13:15:24.374870531Z\",\n                \"ip\": \"3.238.220.237\"\n            },\n            {\n                \"observed_at\": \"2021-07-30T18:39:38.759735678Z\",\n                \"first_observed_at\": \"2021-07-30T18:39:38.759735678Z\",\n                \"ip\": \"3.239.42.54\"\n            },\n            {\n                \"observed_at\": \"2021-07-25T09:52:25.118866752Z\",\n                \"first_observed_at\": \"2021-07-25T09:52:25.118866752Z\",\n                \"ip\": \"3.239.102.214\"\n            },\n            {\n                \"observed_at\": \"2021-07-30T03:03:50.310955177Z\",\n                \"first_observed_at\": \"2021-07-30T03:03:50.310955177Z\",\n                \"ip\": \"3.239.184.20\"\n            },\n            {\n                \"observed_at\": \"2021-07-30T05:04:40.546389831Z\",\n                \"first_observed_at\": \"2021-07-30T05:04:40.546389831Z\",\n                \"ip\": \"3.249.44.128\"\n            }\n        ],\n        \"links\": {\n            \"next\": \"AS-RtkdGmvsVDItav3sBIVoQkkg2i8FUeQttcRQ4Bn58Cl2TEjUYSZWZPgebwRw8A1wP4ChR-g==\"\n        }\n    }\n}"
 								}
 							]
+						},
+						{
+							"name": "Tag a Cert",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/api/v2/certificates/:fingerprint/tags/:id",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"certificates",
+										":fingerprint",
+										"tags",
+										":id"
+									],
+									"query": [
+										{
+											"key": "cursor",
+											"value": null,
+											"description": "Cursor token from the API response, which fetches the next page of hosts when added to the endpoint URL.",
+											"disabled": true
+										}
+									],
+									"variable": [
+										{
+											"key": "fingerprint",
+											"value": "{{fingerprint}}",
+											"description": "The SHA-256 fingerprint of the requested certificate."
+										},
+										{
+											"key": "id",
+											"value": "{{tagId}}"
+										}
+									]
+								},
+								"description": "List all of the hosts that are currently presenting the certificate specified in the path during a TLS handshake with Censys."
+							},
+							"response": [
+								{
+									"name": "Tag a Cert",
+									"originalRequest": {
+										"method": "PUT",
+										"header": [],
+										"url": {
+											"raw": "{{BASE_URL}}/api/v2/certificates/:fingerprint/tags/:id",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"v2",
+												"certificates",
+												":fingerprint",
+												"tags",
+												":id"
+											],
+											"query": [
+												{
+													"key": "cursor",
+													"value": null,
+													"description": "Cursor token from the API response, which fetches the next page of hosts when added to the endpoint URL.",
+													"disabled": true
+												}
+											],
+											"variable": [
+												{
+													"key": "fingerprint",
+													"value": "a7b0ce66b54282a71d4173edf1d3ab9c61c936e9e88aec5d0095491fb51399e1",
+													"description": "The SHA-256 fingerprint of the requested certificate."
+												},
+												{
+													"key": "id",
+													"value": "631"
+												}
+											]
+										}
+									},
+									"status": "No Content",
+									"code": 204,
+									"_postman_previewlanguage": "plain",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Thu, 02 Dec 2021 02:01:25 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "Strict-Transport-Security",
+											"value": "max-age=31536000; includeSubDomains; preload"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Access-Control-Allow-Credentials",
+											"value": "true"
+										},
+										{
+											"key": "CF-Cache-Status",
+											"value": "DYNAMIC"
+										},
+										{
+											"key": "Expect-CT",
+											"value": "max-age=604800, report-uri=\"https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct\""
+										},
+										{
+											"key": "Report-To",
+											"value": "{\"endpoints\":[{\"url\":\"https:\\/\\/a.nel.cloudflare.com\\/report\\/v3?s=JYk0RsNsxgjeTUuGuyK2PZK%2BTfIRLRNabNPpu7E5G4CM9jmNGGisrbTmqU7OX5x4rA4q3%2FXjlEG2rExN4E770fsfmNcolEKknvKkbCsvoYsgpkcx1LzqsOrf7LmQFB12Ch8%3D\"}],\"group\":\"cf-nel\",\"max_age\":604800}"
+										},
+										{
+											"key": "NEL",
+											"value": "{\"success_fraction\":0,\"report_to\":\"cf-nel\",\"max_age\":604800}"
+										},
+										{
+											"key": "Server",
+											"value": "cloudflare"
+										},
+										{
+											"key": "CF-RAY",
+											"value": "6b70f79fcc97638c-ORD"
+										}
+									],
+									"cookie": [],
+									"body": null
+								}
+							]
+						},
+						{
+							"name": "Untag a Cert",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/api/v2/certificates/:fingerprint/tags/:id",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"certificates",
+										":fingerprint",
+										"tags",
+										":id"
+									],
+									"query": [
+										{
+											"key": "cursor",
+											"value": null,
+											"description": "Cursor token from the API response, which fetches the next page of hosts when added to the endpoint URL.",
+											"disabled": true
+										}
+									],
+									"variable": [
+										{
+											"key": "fingerprint",
+											"value": "{{fingerprint}}",
+											"description": "The SHA-256 fingerprint of the requested certificate."
+										},
+										{
+											"key": "id",
+											"value": "{{tagId}}"
+										}
+									]
+								},
+								"description": "List all of the hosts that are currently presenting the certificate specified in the path during a TLS handshake with Censys."
+							},
+							"response": [
+								{
+									"name": "Untag a Cert",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{BASE_URL}}/api/v2/certificates/:fingerprint/tags/:id",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"v2",
+												"certificates",
+												":fingerprint",
+												"tags",
+												":id"
+											],
+											"query": [
+												{
+													"key": "cursor",
+													"value": null,
+													"description": "Cursor token from the API response, which fetches the next page of hosts when added to the endpoint URL.",
+													"disabled": true
+												}
+											],
+											"variable": [
+												{
+													"key": "fingerprint",
+													"value": "a7b0ce66b54282a71d4173edf1d3ab9c61c936e9e88aec5d0095491fb51399e1",
+													"description": "The SHA-256 fingerprint of the requested certificate."
+												},
+												{
+													"key": "id",
+													"value": "631"
+												}
+											]
+										}
+									},
+									"status": "No Content",
+									"code": 204,
+									"_postman_previewlanguage": "plain",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Thu, 02 Dec 2021 02:18:10 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "Strict-Transport-Security",
+											"value": "max-age=31536000; includeSubDomains; preload"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Access-Control-Allow-Credentials",
+											"value": "true"
+										},
+										{
+											"key": "CF-Cache-Status",
+											"value": "DYNAMIC"
+										},
+										{
+											"key": "Expect-CT",
+											"value": "max-age=604800, report-uri=\"https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct\""
+										},
+										{
+											"key": "Report-To",
+											"value": "{\"endpoints\":[{\"url\":\"https:\\/\\/a.nel.cloudflare.com\\/report\\/v3?s=TndFy29z%2FzG7bP%2FgkTX81mW0HqMqU1att8GHj4NNmhMy%2FOCUYIAMozXtRoUtIJA1OHOIzcRrrXErRgBUPSj5PNY4P3dRo7UH9qvPTKGod7GSq0TopqKW8snizJuJ%2F11AE8Q%3D\"}],\"group\":\"cf-nel\",\"max_age\":604800}"
+										},
+										{
+											"key": "NEL",
+											"value": "{\"success_fraction\":0,\"report_to\":\"cf-nel\",\"max_age\":604800}"
+										},
+										{
+											"key": "Server",
+											"value": "cloudflare"
+										},
+										{
+											"key": "CF-RAY",
+											"value": "6b7110266cd7616e-ORD"
+										}
+									],
+									"cookie": [],
+									"body": null
+								}
+							]
 						}
 					]
 				},
@@ -2234,7 +2989,7 @@
 					"name": "Metadata",
 					"item": [
 						{
-							"name": "Hosts",
+							"name": "Host Service Scan List",
 							"request": {
 								"method": "GET",
 								"header": [],
@@ -2249,11 +3004,12 @@
 										"metadata",
 										"hosts"
 									]
-								}
+								},
+								"description": "List all of the service names that Censys can identify running on open ports on hosts."
 							},
 							"response": [
 								{
-									"name": "Hosts",
+									"name": "Host Service Scan List",
 									"originalRequest": {
 										"method": "GET",
 										"header": [],
@@ -2276,7 +3032,7 @@
 									"header": [
 										{
 											"key": "Date",
-											"value": "Fri, 30 Jul 2021 19:08:53 GMT"
+											"value": "Wed, 17 Nov 2021 21:56:38 GMT"
 										},
 										{
 											"key": "Content-Type",
@@ -2299,6 +3055,166 @@
 											"value": "*"
 										},
 										{
+											"key": "Strict-Transport-Security",
+											"value": "max-age=31536000; includeSubDomains; preload"
+										},
+										{
+											"key": "Access-Control-Allow-Credentials",
+											"value": "true"
+										},
+										{
+											"key": "CF-Cache-Status",
+											"value": "DYNAMIC"
+										},
+										{
+											"key": "Expect-CT",
+											"value": "max-age=604800, report-uri=\"https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct\""
+										},
+										{
+											"key": "Report-To",
+											"value": "{\"endpoints\":[{\"url\":\"https:\\/\\/a.nel.cloudflare.com\\/report\\/v3?s=ZZLiTTgh5qLmZ6RLxZSh4GpxsZH8mmZyqBrFXJBRLzACiWnAvWGHshsxHIzHqfUs6K9SE0bIEus1FoDh%2BLSYpGtApXzEzucKctRgI%2BOk1ZG0rc7LcWGi5ZGoE42pzEgGwCs%3D\"}],\"group\":\"cf-nel\",\"max_age\":604800}"
+										},
+										{
+											"key": "NEL",
+											"value": "{\"success_fraction\":0,\"report_to\":\"cf-nel\",\"max_age\":604800}"
+										},
+										{
+											"key": "Server",
+											"value": "cloudflare"
+										},
+										{
+											"key": "CF-RAY",
+											"value": "6afc35cbfd272d01-ORD"
+										},
+										{
+											"key": "Content-Encoding",
+											"value": "br"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"code\": 200,\n    \"status\": \"OK\",\n    \"result\": {\n        \"services\": [\n            \"AMQP\",\n            \"ANDROMOUSE\",\n            \"ARD\",\n            \"ATG\",\n            \"BACNET\",\n            \"BEANSTALKD\",\n            \"BGP\",\n            \"BITCOIN\",\n            \"BITTORRENT\",\n            \"BITTORRENT_TRACKER\",\n            \"BOLT\",\n            \"CASSANDRA\",\n            \"CHARGEN\",\n            \"CITRIX\",\n            \"COAP\",\n            \"CODESYS\",\n            \"CWMP\",\n            \"DB2\",\n            \"DICT\",\n            \"DIGI\",\n            \"DNP3\",\n            \"DNS\",\n            \"EIP\",\n            \"ELASTICSEARCH\",\n            \"FINS\",\n            \"FOX\",\n            \"FTP\",\n            \"GE_SRTP\",\n            \"HART\",\n            \"HTTP\",\n            \"ICAP\",\n            \"IDENT\",\n            \"IEC60870_5_104\",\n            \"IMAP\",\n            \"IPMI\",\n            \"IPP\",\n            \"IRC\",\n            \"KAFKA\",\n            \"KERBEROS\",\n            \"KUBERNETES\",\n            \"LDAP\",\n            \"MDNS\",\n            \"MEMCACHED\",\n            \"MIKROTIK_BW\",\n            \"MMS\",\n            \"MODBUS\",\n            \"MONGODB\",\n            \"MQTT\",\n            \"MSSQL\",\n            \"MURMUR\",\n            \"MYSQL\",\n            \"NATPMP\",\n            \"NETBIOS\",\n            \"NETIS\",\n            \"NTP\",\n            \"OPENVPN\",\n            \"ORACLE\",\n            \"PCWORX\",\n            \"PC_ANYWHERE\",\n            \"PIGEONHOLE\",\n            \"PJL\",\n            \"POP3\",\n            \"POPPASSD\",\n            \"PORTMAP\",\n            \"POSTGRES\",\n            \"PPTP\",\n            \"PROMETHEUS\",\n            \"PRO_CON_OS\",\n            \"QOTD\",\n            \"RADIUS\",\n            \"RDP\",\n            \"REDIS\",\n            \"RETHINKDB\",\n            \"RIPV1\",\n            \"RSYNC\",\n            \"RTSP\",\n            \"S7\",\n            \"SCCM\",\n            \"SENTINEL\",\n            \"SIP\",\n            \"SKINNY\",\n            \"SMB\",\n            \"SMTP\",\n            \"SNMP\",\n            \"SSDP\",\n            \"SSH\",\n            \"STATSD\",\n            \"TEAMSPEAK\",\n            \"TEAM_VIEWER\",\n            \"TELNET\",\n            \"TERRARIA\",\n            \"TFTP\",\n            \"TORCONTROL\",\n            \"UBIQUITI\",\n            \"UNKNOWN\",\n            \"UPNP\",\n            \"VALVE\",\n            \"VNC\",\n            \"WDBRPC\",\n            \"WS_DISCOVERY\",\n            \"X11\",\n            \"XDMCP\",\n            \"XMPP\",\n            \"ZOOKEEPER\"\n        ]\n    }\n}"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Comments",
+					"item": [
+						{
+							"name": "Add a Comment",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"contents\": \"**This is a bold comment.**\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/v2/:resource/:id/comments",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										":resource",
+										":id",
+										"comments"
+									],
+									"variable": [
+										{
+											"key": "resource",
+											"value": "hosts",
+											"description": "{hosts, certificates}"
+										},
+										{
+											"key": "id",
+											"value": "8.8.8.8",
+											"description": "The ID of the requested resource."
+										}
+									]
+								},
+								"description": "Add a comment to a host or certificate."
+							},
+							"response": [
+								{
+									"name": "Add a Comment (Host)",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"contents\": \"**This is a bold comment.**\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/api/v2/:resource/:id/comments",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"v2",
+												":resource",
+												":id",
+												"comments"
+											],
+											"variable": [
+												{
+													"key": "resource",
+													"value": "hosts"
+												},
+												{
+													"key": "id",
+													"value": "8.8.8.8",
+													"description": "The ID of the requested resource."
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Thu, 18 Nov 2021 14:49:35 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Strict-Transport-Security",
+											"value": "max-age=31536000; includeSubDomains; preload"
+										},
+										{
 											"key": "Access-Control-Allow-Credentials",
 											"value": "true"
 										},
@@ -2316,7 +3232,1737 @@
 										}
 									],
 									"cookie": [],
-									"body": "{\n    \"code\": 200,\n    \"status\": \"OK\",\n    \"result\": {\n        \"services\": [\n            \"AMQP\",\n            \"ARD\",\n            \"ATG\",\n            \"BACNET\",\n            \"BEANSTALKD\",\n            \"BITTORRENT\",\n            \"CHARGEN\",\n            \"CITRIX\",\n            \"COAP\",\n            \"CODESYS\",\n            \"CWMP\",\n            \"DB2\",\n            \"DIGI\",\n            \"DNP3\",\n            \"DNS\",\n            \"ELASTICSEARCH\",\n            \"FOX\",\n            \"FTP\",\n            \"GE_SRTP\",\n            \"HTTP\",\n            \"ICAP\",\n            \"IDENT\",\n            \"IEC60870_5_104\",\n            \"IKETTLE\",\n            \"IMAP\",\n            \"IPMI\",\n            \"IPP\",\n            \"IRC\",\n            \"KUBERNETES\",\n            \"LDAP\",\n            \"MDNS\",\n            \"MEMCACHED\",\n            \"MODBUS\",\n            \"MONGODB\",\n            \"MQTT\",\n            \"MSSQL\",\n            \"MURMUR\",\n            \"MYSQL\",\n            \"NATPMP\",\n            \"NETBIOS\",\n            \"NETIS\",\n            \"NTP\",\n            \"OPENVPN\",\n            \"ORACLE\",\n            \"PCWORX\",\n            \"PC_ANYWHERE\",\n            \"PIGEONHOLE\",\n            \"POP3\",\n            \"POPPASSD\",\n            \"PORTMAP\",\n            \"POSTGRES\",\n            \"PPTP\",\n            \"PROMETHEUS\",\n            \"PRO_CON_OS\",\n            \"QOTD\",\n            \"RDP\",\n            \"RDP_UDP\",\n            \"REDIS\",\n            \"RIPV1\",\n            \"RSYNC\",\n            \"RTSP\",\n            \"S7\",\n            \"SENTINEL\",\n            \"SIP\",\n            \"SKINNY\",\n            \"SMB\",\n            \"SMTP\",\n            \"SNMP\",\n            \"SSDP\",\n            \"SSH\",\n            \"TEAMSPEAK\",\n            \"TEAM_VIEWER\",\n            \"TELNET\",\n            \"TERRARIA\",\n            \"TFTP\",\n            \"TORCONTROL\",\n            \"UBIQUITI\",\n            \"UNKNOWN\",\n            \"VALVE\",\n            \"VNC\",\n            \"WDBRPC\",\n            \"WS_DISCOVERY\",\n            \"X11\",\n            \"XDMCP\"\n        ]\n    }\n}"
+									"body": "{\n    \"code\": 200,\n    \"status\": \"OK\",\n    \"result\": {\n        \"id\": \"162\",\n        \"ip\": \"8.8.8.8\",\n        \"author_id\": \"e4e049dfe0264afd91f56f61b35e13f7\",\n        \"contents\": \"**This is a bold comment.**\",\n        \"created_at\": \"2021-11-18T14:49:35.621290224Z\",\n        \"updated_at\": \"2021-11-18T14:49:35.621290224Z\"\n    }\n}"
+								},
+								{
+									"name": "Add a Comment (Certificate)",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"contents\": \"**This is a bold comment.**\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/api/v2/:resource/:id/comments",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"v2",
+												":resource",
+												":id",
+												"comments"
+											],
+											"variable": [
+												{
+													"key": "resource",
+													"value": "certificates"
+												},
+												{
+													"key": "id",
+													"value": "643bc8701cb862b7b7903b8ddb653f1636998a1d2a53f4814abde1a1958f5b6f",
+													"description": "The ID of the requested resource."
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Thu, 18 Nov 2021 14:50:15 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Strict-Transport-Security",
+											"value": "max-age=31536000; includeSubDomains; preload"
+										},
+										{
+											"key": "Access-Control-Allow-Credentials",
+											"value": "true"
+										},
+										{
+											"key": "CF-Cache-Status",
+											"value": "DYNAMIC"
+										},
+										{
+											"key": "Server",
+											"value": "cloudflare"
+										},
+										{
+											"key": "Content-Encoding",
+											"value": "br"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"code\": 200,\n    \"status\": \"OK\",\n    \"result\": {\n        \"id\": \"115\",\n        \"fingerprint\": \"643bc8701cb862b7b7903b8ddb653f1636998a1d2a53f4814abde1a1958f5b6f\",\n        \"author_id\": \"e4e049dfe0264afd91f56f61b35e13f7\",\n        \"contents\": \"**This is a bold comment.**\",\n        \"created_at\": \"2021-11-18T14:50:15.808453404Z\",\n        \"updated_at\": \"2021-11-18T14:50:15.808453404Z\"\n    }\n}"
+								}
+							]
+						},
+						{
+							"name": "List Comments",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/api/v2/:resource/:id/comments",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										":resource",
+										":id",
+										"comments"
+									],
+									"variable": [
+										{
+											"key": "resource",
+											"value": "hosts",
+											"description": "{hosts, certificates}"
+										},
+										{
+											"key": "id",
+											"value": "8.8.8.8",
+											"description": "The ID of the requested resource."
+										}
+									]
+								},
+								"description": "List all comments on a host or certificate."
+							},
+							"response": [
+								{
+									"name": "List Comments (Host)",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{BASE_URL}}/api/v2/:resource/:id/comments",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"v2",
+												":resource",
+												":id",
+												"comments"
+											],
+											"variable": [
+												{
+													"key": "resource",
+													"value": "hosts"
+												},
+												{
+													"key": "id",
+													"value": "8.8.8.8",
+													"description": "The ID of the requested resource."
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Thu, 18 Nov 2021 15:00:38 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Strict-Transport-Security",
+											"value": "max-age=31536000; includeSubDomains; preload"
+										},
+										{
+											"key": "Access-Control-Allow-Credentials",
+											"value": "true"
+										},
+										{
+											"key": "CF-Cache-Status",
+											"value": "DYNAMIC"
+										},
+										{
+											"key": "Server",
+											"value": "cloudflare"
+										},
+										{
+											"key": "Content-Encoding",
+											"value": "br"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"code\": 200,\n    \"status\": \"OK\",\n    \"result\": {\n        \"ip\": \"8.8.8.8\",\n        \"comments\": [\n            {\n                \"id\": \"162\",\n                \"ip\": \"8.8.8.8\",\n                \"author_id\": \"e4e049dfe0264afd91f56f61b35e13f7\",\n                \"contents\": \"**This is a bold comment.**\",\n                \"created_at\": \"2021-11-18T14:49:35.621290Z\",\n                \"updated_at\": \"2021-11-18T14:49:35.621290Z\"\n            }\n        ]\n    }\n}"
+								},
+								{
+									"name": "List Comments (Certificate)",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{BASE_URL}}/api/v2/:resource/:id/comments",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"v2",
+												":resource",
+												":id",
+												"comments"
+											],
+											"variable": [
+												{
+													"key": "resource",
+													"value": "certificates"
+												},
+												{
+													"key": "id",
+													"value": "643bc8701cb862b7b7903b8ddb653f1636998a1d2a53f4814abde1a1958f5b6f",
+													"description": "The ID of the requested resource."
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Thu, 18 Nov 2021 15:04:49 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Strict-Transport-Security",
+											"value": "max-age=31536000; includeSubDomains; preload"
+										},
+										{
+											"key": "Access-Control-Allow-Credentials",
+											"value": "true"
+										},
+										{
+											"key": "CF-Cache-Status",
+											"value": "DYNAMIC"
+										},
+										{
+											"key": "Server",
+											"value": "cloudflare"
+										},
+										{
+											"key": "Content-Encoding",
+											"value": "br"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"code\": 200,\n    \"status\": \"OK\",\n    \"result\": {\n        \"fingerprint\": \"643bc8701cb862b7b7903b8ddb653f1636998a1d2a53f4814abde1a1958f5b6f\",\n        \"comments\": [\n            {\n                \"id\": \"115\",\n                \"fingerprint\": \"643bc8701cb862b7b7903b8ddb653f1636998a1d2a53f4814abde1a1958f5b6f\",\n                \"author_id\": \"e4e049dfe0264afd91f56f61b35e13f7\",\n                \"contents\": \"**This is a bold comment.**\",\n                \"created_at\": \"2021-11-18T14:50:15.808453Z\",\n                \"updated_at\": \"2021-11-18T14:50:15.808453Z\"\n            }\n        ]\n    }\n}"
+								}
+							]
+						},
+						{
+							"name": "View a Comment",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/api/v2/:resource/:id/comments/:comment_id",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										":resource",
+										":id",
+										"comments",
+										":comment_id"
+									],
+									"variable": [
+										{
+											"key": "resource",
+											"value": "hosts",
+											"description": "{hosts, certificates}"
+										},
+										{
+											"key": "id",
+											"value": "8.8.8.8",
+											"description": "The ID of the requested resource."
+										},
+										{
+											"key": "comment_id",
+											"value": "123",
+											"description": "The ID of the requested comment."
+										}
+									]
+								},
+								"description": "View a comment on a host or certificate."
+							},
+							"response": [
+								{
+									"name": "View a Comment (Host)",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{BASE_URL}}/api/v2/:resource/:id/comments/:comment_id",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"v2",
+												":resource",
+												":id",
+												"comments",
+												":comment_id"
+											],
+											"variable": [
+												{
+													"key": "resource",
+													"value": "hosts"
+												},
+												{
+													"key": "id",
+													"value": "8.8.8.8",
+													"description": "The ID of the requested resource."
+												},
+												{
+													"key": "comment_id",
+													"value": "162",
+													"description": "The ID of the requested comment."
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Thu, 18 Nov 2021 15:22:41 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Strict-Transport-Security",
+											"value": "max-age=31536000; includeSubDomains; preload"
+										},
+										{
+											"key": "Access-Control-Allow-Credentials",
+											"value": "true"
+										},
+										{
+											"key": "CF-Cache-Status",
+											"value": "DYNAMIC"
+										},
+										{
+											"key": "Server",
+											"value": "cloudflare"
+										},
+										{
+											"key": "Content-Encoding",
+											"value": "br"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"code\": 200,\n    \"status\": \"OK\",\n    \"result\": {\n        \"id\": \"162\",\n        \"ip\": \"8.8.8.8\",\n        \"author_id\": \"e4e049dfe0264afd91f56f61b35e13f7\",\n        \"contents\": \"**This is a bold comment.**\",\n        \"created_at\": \"2021-11-18T14:49:35.621290Z\",\n        \"updated_at\": \"2021-11-18T14:49:35.621290Z\"\n    }\n}"
+								},
+								{
+									"name": "View a Comment (Certificate)",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{BASE_URL}}/api/v2/:resource/:id/comments/:comment_id",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"v2",
+												":resource",
+												":id",
+												"comments",
+												":comment_id"
+											],
+											"variable": [
+												{
+													"key": "resource",
+													"value": "certificates"
+												},
+												{
+													"key": "id",
+													"value": "643bc8701cb862b7b7903b8ddb653f1636998a1d2a53f4814abde1a1958f5b6f",
+													"description": "The ID of the requested resource."
+												},
+												{
+													"key": "comment_id",
+													"value": "115",
+													"description": "The ID of the requested comment."
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Thu, 18 Nov 2021 15:30:13 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Strict-Transport-Security",
+											"value": "max-age=31536000; includeSubDomains; preload"
+										},
+										{
+											"key": "Access-Control-Allow-Credentials",
+											"value": "true"
+										},
+										{
+											"key": "CF-Cache-Status",
+											"value": "DYNAMIC"
+										},
+										{
+											"key": "Server",
+											"value": "cloudflare"
+										},
+										{
+											"key": "Content-Encoding",
+											"value": "br"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"code\": 200,\n    \"status\": \"OK\",\n    \"result\": {\n        \"id\": \"115\",\n        \"fingerprint\": \"643bc8701cb862b7b7903b8ddb653f1636998a1d2a53f4814abde1a1958f5b6f\",\n        \"author_id\": \"e4e049dfe0264afd91f56f61b35e13f7\",\n        \"contents\": \"**This is a bold comment.**\",\n        \"created_at\": \"2021-11-18T14:50:15.808453Z\",\n        \"updated_at\": \"2021-11-18T14:50:15.808453Z\"\n    }\n}"
+								}
+							]
+						},
+						{
+							"name": "Edit a Comment",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"contents\": \"This is an updated comment.\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/v2/:resource/:id/comments/:comment_id",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										":resource",
+										":id",
+										"comments",
+										":comment_id"
+									],
+									"variable": [
+										{
+											"key": "resource",
+											"value": "{{resource}}"
+										},
+										{
+											"key": "id",
+											"value": ""
+										},
+										{
+											"key": "comment_id",
+											"value": ""
+										}
+									]
+								},
+								"description": "Update the contents of a comment on a host or certificate."
+							},
+							"response": [
+								{
+									"name": "Edit a Comment (Host)",
+									"originalRequest": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"contents\": \"This is an updated comment.\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/api/v2/:resource/:id/comments/:comment_id",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"v2",
+												":resource",
+												":id",
+												"comments",
+												":comment_id"
+											],
+											"variable": [
+												{
+													"key": "resource",
+													"value": "hosts",
+													"description": "{hosts, certificates}"
+												},
+												{
+													"key": "id",
+													"value": "8.8.8.8",
+													"description": "The ID of the requested resource."
+												},
+												{
+													"key": "comment_id",
+													"value": "162",
+													"description": "The ID of the requested comment."
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Thu, 18 Nov 2021 16:00:07 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Strict-Transport-Security",
+											"value": "max-age=31536000; includeSubDomains; preload"
+										},
+										{
+											"key": "Access-Control-Allow-Credentials",
+											"value": "true"
+										},
+										{
+											"key": "CF-Cache-Status",
+											"value": "DYNAMIC"
+										},
+										{
+											"key": "Server",
+											"value": "cloudflare"
+										},
+										{
+											"key": "Content-Encoding",
+											"value": "br"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"code\": 200,\n    \"status\": \"OK\",\n    \"result\": {\n        \"id\": \"162\",\n        \"ip\": \"8.8.8.8\",\n        \"author_id\": \"e4e049dfe0264afd91f56f61b35e13f7\",\n        \"contents\": \"This is an updated comment.\",\n        \"created_at\": \"2021-11-18T14:49:35.621290Z\",\n        \"updated_at\": \"2021-11-18T16:00:07.267550Z\"\n    }\n}"
+								},
+								{
+									"name": "Edit a Comment (Certificate)",
+									"originalRequest": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"contents\": \"This is an updated comment.\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/api/v2/:resource/:id/comments/:comment_id",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"v2",
+												":resource",
+												":id",
+												"comments",
+												":comment_id"
+											],
+											"variable": [
+												{
+													"key": "resource",
+													"value": "certificates",
+													"description": "{hosts, certificates}"
+												},
+												{
+													"key": "id",
+													"value": "643bc8701cb862b7b7903b8ddb653f1636998a1d2a53f4814abde1a1958f5b6f",
+													"description": "The ID of the requested resource."
+												},
+												{
+													"key": "comment_id",
+													"value": "115",
+													"description": "The ID of the requested comment."
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Thu, 18 Nov 2021 16:01:53 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Strict-Transport-Security",
+											"value": "max-age=31536000; includeSubDomains; preload"
+										},
+										{
+											"key": "Access-Control-Allow-Credentials",
+											"value": "true"
+										},
+										{
+											"key": "CF-Cache-Status",
+											"value": "DYNAMIC"
+										},
+										{
+											"key": "Server",
+											"value": "cloudflare"
+										},
+										{
+											"key": "Content-Encoding",
+											"value": "br"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"code\": 200,\n    \"status\": \"OK\",\n    \"result\": {\n        \"id\": \"115\",\n        \"fingerprint\": \"643bc8701cb862b7b7903b8ddb653f1636998a1d2a53f4814abde1a1958f5b6f\",\n        \"author_id\": \"e4e049dfe0264afd91f56f61b35e13f7\",\n        \"contents\": \"This is an updated comment.\",\n        \"created_at\": \"2021-11-18T14:50:15.808453Z\",\n        \"updated_at\": \"2021-11-18T16:01:53.141298Z\"\n    }\n}"
+								}
+							]
+						},
+						{
+							"name": "Remove a Comment",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/api/v2/:resource/:id/comments/:comment_id",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										":resource",
+										":id",
+										"comments",
+										":comment_id"
+									],
+									"variable": [
+										{
+											"key": "resource",
+											"value": "hosts",
+											"description": "{hosts, certificates}"
+										},
+										{
+											"key": "id",
+											"value": "8.8.8.8",
+											"description": "The ID of the requested resource."
+										},
+										{
+											"key": "comment_id",
+											"value": "123",
+											"description": "The ID of the requested comment."
+										}
+									]
+								},
+								"description": "Remove a comment from a host or certificate."
+							},
+							"response": [
+								{
+									"name": "Remove a Comment (Host)",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{BASE_URL}}/api/v2/:resource/:id/comments/:comment_id",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"v2",
+												":resource",
+												":id",
+												"comments",
+												":comment_id"
+											],
+											"variable": [
+												{
+													"key": "resource",
+													"value": "hosts",
+													"description": "{hosts, certificates}"
+												},
+												{
+													"key": "id",
+													"value": "8.8.8.8",
+													"description": "The ID of the requested resource."
+												},
+												{
+													"key": "comment_id",
+													"value": "162",
+													"description": "The ID of the requested comment."
+												}
+											]
+										}
+									},
+									"status": "No Content",
+									"code": 204,
+									"_postman_previewlanguage": "plain",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Thu, 18 Nov 2021 16:03:35 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "Strict-Transport-Security",
+											"value": "max-age=31536000; includeSubDomains; preload"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Access-Control-Allow-Credentials",
+											"value": "true"
+										},
+										{
+											"key": "CF-Cache-Status",
+											"value": "DYNAMIC"
+										},
+										{
+											"key": "Server",
+											"value": "cloudflare"
+										}
+									],
+									"cookie": [],
+									"body": null
+								},
+								{
+									"name": "Remove a Comment (Certificate)",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{BASE_URL}}/api/v2/:resource/:id/comments/:comment_id",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"v2",
+												":resource",
+												":id",
+												"comments",
+												":comment_id"
+											],
+											"variable": [
+												{
+													"key": "resource",
+													"value": "certificates",
+													"description": "{hosts, certificates}"
+												},
+												{
+													"key": "id",
+													"value": "643bc8701cb862b7b7903b8ddb653f1636998a1d2a53f4814abde1a1958f5b6f",
+													"description": "The ID of the requested resource."
+												},
+												{
+													"key": "comment_id",
+													"value": "115",
+													"description": "The ID of the requested comment."
+												}
+											]
+										}
+									},
+									"status": "No Content",
+									"code": 204,
+									"_postman_previewlanguage": "plain",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Thu, 18 Nov 2021 16:04:26 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "Strict-Transport-Security",
+											"value": "max-age=31536000; includeSubDomains; preload"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Access-Control-Allow-Credentials",
+											"value": "true"
+										},
+										{
+											"key": "CF-Cache-Status",
+											"value": "DYNAMIC"
+										},
+										{
+											"key": "Server",
+											"value": "cloudflare"
+										}
+									],
+									"cookie": [],
+									"body": null
+								}
+							]
+						}
+					],
+					"description": "Comment on and manage comments on hosts or certificates with the endpoints shown here. Comments are visible to any member of your team."
+				},
+				{
+					"name": "Tags",
+					"item": [
+						{
+							"name": "Create a Tag",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"tag-name\",\n  \"metadata\": {\n    \"color\": \"ff6113\"\n  }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/v2/tags",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"tags"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Create a Tag",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"name\": \"tag-name\",\n  \"metadata\": {\n    \"color\": \"ff6113\"\n  }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/api/v2/tags",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"v2",
+												"tags"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Mon, 29 Nov 2021 14:02:43 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Strict-Transport-Security",
+											"value": "max-age=31536000; includeSubDomains; preload"
+										},
+										{
+											"key": "Access-Control-Allow-Credentials",
+											"value": "true"
+										},
+										{
+											"key": "CF-Cache-Status",
+											"value": "DYNAMIC"
+										},
+										{
+											"key": "Server",
+											"value": "cloudflare"
+										},
+										{
+											"key": "Content-Encoding",
+											"value": "br"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"code\": 200,\n    \"status\": \"OK\",\n    \"result\": {\n        \"id\": \"2\",\n        \"name\": \"tag-name\",\n        \"metadata\": {\n            \"color\": \"ff6113\"\n        },\n        \"created_at\": \"2021-11-29T14:11:29.356874Z\",\n        \"updated_at\": \"2021-11-29T14:11:29.356874Z\"\n    }\n}"
+								}
+							]
+						},
+						{
+							"name": "List Tags",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/api/v2/tags",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"tags"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "List Tags",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{BASE_URL}}/api/v2/tags",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"v2",
+												"tags"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Mon, 29 Nov 2021 13:55:38 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Strict-Transport-Security",
+											"value": "max-age=31536000; includeSubDomains; preload"
+										},
+										{
+											"key": "Access-Control-Allow-Credentials",
+											"value": "true"
+										},
+										{
+											"key": "CF-Cache-Status",
+											"value": "DYNAMIC"
+										},
+										{
+											"key": "Server",
+											"value": "cloudflare"
+										},
+										{
+											"key": "Content-Encoding",
+											"value": "br"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"code\": 200,\n    \"status\": \"OK\",\n    \"result\": {\n        \"tags\": [\n            {\n                \"id\": \"1\",\n                \"name\": \"tag-name\",\n                \"metadata\": {\n                    \"color\": \"ff6113\"\n                },\n                \"created_at\": \"2021-01-01T00:00:00.000000000Z\",\n                \"updated_at\": \"2021-01-01T00:00:00.000000000Z\"\n            }\n        ]\n    }\n}"
+								}
+							]
+						},
+						{
+							"name": "View a Tag",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/api/v2/tags/:id",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"tags",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1",
+											"description": "The unique ID of the tag."
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "View a Tag",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{BASE_URL}}/api/v2/tags/:id",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"v2",
+												"tags",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1",
+													"description": "The unique ID of the tag."
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Mon, 29 Nov 2021 14:06:21 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Strict-Transport-Security",
+											"value": "max-age=31536000; includeSubDomains; preload"
+										},
+										{
+											"key": "Access-Control-Allow-Credentials",
+											"value": "true"
+										},
+										{
+											"key": "CF-Cache-Status",
+											"value": "DYNAMIC"
+										},
+										{
+											"key": "Server",
+											"value": "cloudflare"
+										},
+										{
+											"key": "Content-Encoding",
+											"value": "br"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"code\": 200,\n    \"status\": \"OK\",\n    \"result\": {\n        \"id\": \"1\",\n        \"name\": \"tag-name\",\n        \"metadata\": {\n            \"color\": \"ff6113\"\n        },\n        \"created_at\": \"2021-01-01T00:00:00.000000000Z\",\n        \"updated_at\": \"2021-01-01T00:00:00.000000000Z\"\n    }\n}"
+								}
+							]
+						},
+						{
+							"name": "List Hosts by Tag",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/api/v2/tags/:id/hosts",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"tags",
+										":id",
+										"hosts"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "{{tagId}}",
+											"description": "The unique ID of the tag."
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "List Hosts by Tag",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{BASE_URL}}/api/v2/tags/:id/hosts",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"v2",
+												"tags",
+												":id",
+												"hosts"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "78",
+													"description": "The unique ID of the tag."
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Thu, 02 Dec 2021 02:06:11 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Strict-Transport-Security",
+											"value": "max-age=31536000; includeSubDomains; preload"
+										},
+										{
+											"key": "Access-Control-Allow-Credentials",
+											"value": "true"
+										},
+										{
+											"key": "CF-Cache-Status",
+											"value": "DYNAMIC"
+										},
+										{
+											"key": "Expect-CT",
+											"value": "max-age=604800, report-uri=\"https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct\""
+										},
+										{
+											"key": "Report-To",
+											"value": "{\"endpoints\":[{\"url\":\"https:\\/\\/a.nel.cloudflare.com\\/report\\/v3?s=gi3g85L5u39AKIeQxzYYNofzjcfU0hCX6RjmWYNjnjC%2BU2n5YYb7PzbVwuKr8D1fDaZUWNrOV4OUP5s9FnFNiLEo5EJO71MNWDWZi2pahBJBgIgz28GEweoEIu8ZtO9fWAI%3D\"}],\"group\":\"cf-nel\",\"max_age\":604800}"
+										},
+										{
+											"key": "NEL",
+											"value": "{\"success_fraction\":0,\"report_to\":\"cf-nel\",\"max_age\":604800}"
+										},
+										{
+											"key": "Server",
+											"value": "cloudflare"
+										},
+										{
+											"key": "CF-RAY",
+											"value": "6b70fe9799ca638c-ORD"
+										},
+										{
+											"key": "Content-Encoding",
+											"value": "br"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"code\": 200,\n    \"status\": \"OK\",\n    \"result\": {\n        \"hosts\": [\n            {\n                \"ip\": \"8.8.8.8\",\n                \"tagged_at\": \"2021-09-17T18:32:26.301667Z\"\n            },\n            {\n                \"ip\": \"8.8.4.4\",\n                \"tagged_at\": \"2021-09-17T18:39:11.755879Z\"\n            }\n        ]\n    }\n}"
+								}
+							]
+						},
+						{
+							"name": "List Certs by Tag",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/api/v2/tags/:id/certificates",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"tags",
+										":id",
+										"certificates"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "{{tagId}}",
+											"description": "The unique ID of the tag."
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "List Certs by Tag",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{BASE_URL}}/api/v2/tags/:id/certificates",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"v2",
+												"tags",
+												":id",
+												"certificates"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "631",
+													"description": "The unique ID of the tag."
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Thu, 02 Dec 2021 02:09:58 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Strict-Transport-Security",
+											"value": "max-age=31536000; includeSubDomains; preload"
+										},
+										{
+											"key": "Access-Control-Allow-Credentials",
+											"value": "true"
+										},
+										{
+											"key": "CF-Cache-Status",
+											"value": "DYNAMIC"
+										},
+										{
+											"key": "Expect-CT",
+											"value": "max-age=604800, report-uri=\"https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct\""
+										},
+										{
+											"key": "Report-To",
+											"value": "{\"endpoints\":[{\"url\":\"https:\\/\\/a.nel.cloudflare.com\\/report\\/v3?s=hofqMWbT%2BMLaIYEwpNn2QD8EDQAHPVB4MGcHq6So3lmr9mDOc11mZdvnYqIQO4x3Xfr1zIMhW7mWWCx1aHzCge%2Fq4cPqTk1ZiasynV2fXaJCha3hNCfY7vVzweBRc6ju3D8%3D\"}],\"group\":\"cf-nel\",\"max_age\":604800}"
+										},
+										{
+											"key": "NEL",
+											"value": "{\"success_fraction\":0,\"report_to\":\"cf-nel\",\"max_age\":604800}"
+										},
+										{
+											"key": "Server",
+											"value": "cloudflare"
+										},
+										{
+											"key": "CF-RAY",
+											"value": "6b710423ba81638c-ORD"
+										},
+										{
+											"key": "Content-Encoding",
+											"value": "br"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"code\": 200,\n    \"status\": \"OK\",\n    \"result\": {\n        \"certs\": [\n            {\n                \"fingerprint\": \"a7b0ce66b54282a71d4173edf1d3ab9c61c936e9e88aec5d0095491fb51399e1\",\n                \"tagged_at\": \"2021-12-02T02:08:55.564465Z\"\n            },\n            {\n                \"fingerprint\": \"b86cd5a7b8be6e59f8f89f4a253b38a943b6cd025d2dde90e08a4a6fbd8f1d11\",\n                \"tagged_at\": \"2021-12-02T02:09:08.784854Z\"\n            }\n        ]\n    }\n}"
+								}
+							]
+						},
+						{
+							"name": "Edit a Tag",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"tag-name-1\",\n  \"metadata\": {\n    \"color\": \"ff6113\"\n  }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/v2/tags/:id",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"tags",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1",
+											"description": "The unique ID of the tag."
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Update a Tag",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"name\": \"tag-name-1\",\n  \"metadata\": {\n    \"color\": \"ff6113\"\n  }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/api/v2/tags/:id",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"v2",
+												"tags",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1",
+													"description": "The unique ID of the tag."
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Mon, 29 Nov 2021 14:11:44 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Strict-Transport-Security",
+											"value": "max-age=31536000; includeSubDomains; preload"
+										},
+										{
+											"key": "Access-Control-Allow-Credentials",
+											"value": "true"
+										},
+										{
+											"key": "CF-Cache-Status",
+											"value": "DYNAMIC"
+										},
+										{
+											"key": "Expect-CT",
+											"value": "max-age=604800, report-uri=\"https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct\""
+										},
+										{
+											"key": "Report-To",
+											"value": "{\"endpoints\":[{\"url\":\"https:\\/\\/a.nel.cloudflare.com\\/report\\/v3?s=nL%2BPgPomDwL%2FBfGW54h9ksg%2Fxv0ei53bG2euLD1M6sS22iQ0cNDeU5obP4sm%2FlH%2FgS3zfCDbJvhWmT9%2FwZPq2Hkcnn73jqgdxOArnIQpwfh8YKv75AEyUBMN34Qz8RiOUk4%3D\"}],\"group\":\"cf-nel\",\"max_age\":604800}"
+										},
+										{
+											"key": "NEL",
+											"value": "{\"success_fraction\":0,\"report_to\":\"cf-nel\",\"max_age\":604800}"
+										},
+										{
+											"key": "Server",
+											"value": "cloudflare"
+										},
+										{
+											"key": "CF-RAY",
+											"value": "6b5c6d492c1132d9-EWR"
+										},
+										{
+											"key": "Content-Encoding",
+											"value": "br"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"code\": 200,\n    \"status\": \"OK\",\n    \"result\": {\n        \"id\": \"1\",\n        \"name\": \"tag-name-1\",\n        \"metadata\": {\n            \"color\": \"ff6113\"\n        },\n        \"created_at\": \"2021-11-29T14:11:29.356874Z\",\n        \"updated_at\": \"2021-12-01T09:15:57.137423Z\"\n    }\n}"
+								}
+							]
+						},
+						{
+							"name": "Delete a Tag",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/api/v2/tags/:id",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v2",
+										"tags",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1",
+											"description": "The unique ID of the tag."
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Delete a Tag",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{BASE_URL}}/api/v2/tags/:id",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"v2",
+												"tags",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1",
+													"description": "The unique ID of the tag."
+												}
+											]
+										}
+									},
+									"status": "No Content",
+									"code": 204,
+									"_postman_previewlanguage": "plain",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Mon, 29 Nov 2021 14:13:17 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "Strict-Transport-Security",
+											"value": "max-age=31536000; includeSubDomains; preload"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Access-Control-Allow-Credentials",
+											"value": "true"
+										},
+										{
+											"key": "CF-Cache-Status",
+											"value": "DYNAMIC"
+										},
+										{
+											"key": "Server",
+											"value": "cloudflare"
+										}
+									],
+									"cookie": [],
+									"body": null
 								}
 							]
 						}
